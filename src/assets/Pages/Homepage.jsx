@@ -1,15 +1,21 @@
 import React from 'react';
 
 // Import componentes
-import Dashboards from '../Components/Dashboards.jsx';
-
+import InicieComponent from '../Components/InicieComponent';
+import PrintTotalComponent from '../Components/PrintTotalComponent';
 //
 
-function Homepage() {
+function Homepage({movements, setMovements}) {
   return (
-    <>
-      <Dashboards></Dashboards>
-    </>
+    <section className='p-3 h-screen bg-linear-to-b from-white to-[#F4F4F6]'>
+      <div className='mb-5'>
+        <h2>
+          <span className='block text-2xl'>Hola,</span>
+          <span className='block text-2xl font-bold'>Matías Buffa!</span>
+        </h2>
+      </div>
+      <PrintTotalComponent></PrintTotalComponent>
+    </section>
   )
 }
 
