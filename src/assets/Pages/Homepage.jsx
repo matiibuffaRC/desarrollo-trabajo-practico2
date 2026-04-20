@@ -1,11 +1,10 @@
-import React from 'react';
-
-// Import componentes
-import InicieComponent from '../Components/InicieComponent';
+import { useState } from 'react';
 import PrintTotalComponent from '../Components/PrintTotalComponent';
-//
+import MovementForm from '../Components/MovementForm';
 
-function Homepage({movements, setMovements}) {
+function Homepage({ movements, setMovements }) {
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <section className='p-3 h-screen bg-linear-to-b from-white to-[#F4F4F6]'>
       <div className='mb-5'>
@@ -14,9 +13,20 @@ function Homepage({movements, setMovements}) {
           <span className='block text-2xl font-bold'>Matías Buffa!</span>
         </h2>
       </div>
-      <PrintTotalComponent></PrintTotalComponent>
+
+      <PrintTotalComponent
+        movements={movements}
+        onAddClick={() => setShowForm(true)}
+      />
+
+      {showForm && (
+        <MovementForm
+          setMovements={setMovements}
+          onClose={() => setShowForm(false)}
+        />
+      )}
     </section>
-  )
+  );
 }
 
-export default Homepage
+export default Homepage;

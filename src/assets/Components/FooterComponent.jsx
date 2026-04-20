@@ -8,7 +8,7 @@ import statsIcon from "../icons/statIcon.svg";
 
 function FooterComponent() {
     return (
-        <div className='bg-white fixed bottom-0 w-screen border border-black h-15 flex flex-col justify-center items-center'>
+        <div className='bg-white fixed bottom-0 w-screen h-15 flex flex-col justify-center items-center border-t border-gray-200'>
             <div className='flex flex-row items-center justify-center gap-15 w-full'>
                 <div className='hover:bg-[#eee] p-2 rounded-full'>
                     <img src={homeIcon} alt="Home-icon" className='h-5 w-5 hover:cursor-pointer'/>
