@@ -3,11 +3,11 @@ import React from 'react'
 function ShowActivityComponent({ movements }) {
     const printMovements = () => {
         console.log(movements)
-        return movements.map(mov => (
+        return [...movements].reverse().map(mov => (
             <div key={mov.id} className='bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow'>
                 <h2 className='text-md font-bold'>{mov.descripcion}</h2>
                 <div className='flex flex-col items-end'>
-                    <h3 className={`font-bold text-md ${mov.tipo === "ingreso" ? "text-[#00A650]" : ""}`}>{mov.tipo === "ingreso" ? "+" : "-"}${mov.monto.toFixed(2)}</h3>
+                    <h3 className={`font-bold text-md ${mov.tipo === "Ingreso" ? "text-[#00A650]" : ""}`}>{mov.tipo === "Ingreso" ? "+" : "-"}${mov.monto.toFixed(2)}</h3>
                     <h3 className="text-sm text-gray-500">
                         {new Date(mov.fecha).toLocaleDateString("es-AR", {
                             day: "2-digit",

@@ -3,7 +3,7 @@ import plusIcon from "../icons/plus-svgrepo-com.svg";
 
 function PrintTotalComponent({ movements, onAddClick }) {
     const total = movements.reduce((acc, mov) => {
-        return mov.tipo === "ingreso"
+        return mov.tipo === "Ingreso"
         ? acc + mov.monto
         : acc - mov.monto;
     }, 0); //Boludon acordate del valor inicial 0
