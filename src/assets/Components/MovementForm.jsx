@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function MovementForm({ setMovements, onClose }) {
+function MovementForm({ setMovements, onClose, movementToEdit }) {
     const [monto, setMonto] = useState("");
     const [tipo, setTipo] = useState("ingreso");
     const [descripcion, setDescripcion] = useState("");
@@ -12,6 +12,22 @@ function MovementForm({ setMovements, onClose }) {
     useEffect(() => {
         setTimeout(() => setShow(true), 10);
     }, []);
+
+    /* eslint-disable react-hooks/set-state-in-effect */
+    useEffect(() => {
+        if (movementToEdit) {
+            setMonto(movementToEdit.monto.toString());
+            setTipo(movementToEdit.tipo.toLowerCase());
+            setDescripcion(movementToEdit.descripcion);
+            setCategoria(movementToEdit.categoria || "");
+        } else {
+            setMonto("");
+            setTipo("ingreso");
+            setDescripcion("");
+            setCategoria("");
+        }
+    }, [movementToEdit]);
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleClose = () => {
         setShow(false);
@@ -41,19 +57,32 @@ function MovementForm({ setMovements, onClose }) {
                 ? "Ingreso"
                 : "Gasto";
 
-        const nuevoMovimiento = {
-            id: crypto.randomUUID(),
-            monto: Number(monto),
-            tipo: tipoCapitalizado,
-            descripcion: descripcionFinal,
-            categoria: tipo === "gasto" ? categoria : null, // ✅ clave
-            fecha: new Date().toISOString()
-        };
+        if (movementToEdit) {
+            // Editar existente
+            const movimientoActualizado = {
+                ...movementToEdit,
+                monto: Number(monto),
+                tipo: tipoCapitalizado,
+                descripcion: descripcionFinal,
+                categoria: tipo === "gasto" ? categoria : null,
+            };
+            setMovements(prev => prev.map(mov => mov.id === movementToEdit.id ? movimientoActualizado : mov));
+        } else {
+            // Crear nuevo
+            const nuevoMovimiento = {
+                id: crypto.randomUUID(),
+                monto: Number(monto),
+                tipo: tipoCapitalizado,
+                descripcion: descripcionFinal,
+                categoria: tipo === "gasto" ? categoria : null,
+                fecha: new Date().toISOString()
+            };
+            setMovements(prev => [...prev, nuevoMovimiento]);
+        }
 
-        setMovements(prev => [...prev, nuevoMovimiento]);
-
-        // limpiar
+        // Resetear form
         setMonto("");
+        setTipo("ingreso");
         setDescripcion("");
         setCategoria("");
 

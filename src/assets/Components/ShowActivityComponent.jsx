@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 function ShowActivityComponent({ movements }) {
     const printMovements = () => {
@@ -23,7 +24,7 @@ function ShowActivityComponent({ movements }) {
         <div>
             <div className='flex flex-row items-center justify-between px-2 mt-3 mb-1'>
                 <h2 className='text-xl font-bold'>Actividad reciente</h2>
-                <h3 className='text-sm'>Ver todo</h3>
+                <Link to="/activity" className='text-sm text-blue-500 underline'>Ver todo</Link>
             </div>
             <div className='flex flex-col gap-2 px-2'>
                 {printMovements()}

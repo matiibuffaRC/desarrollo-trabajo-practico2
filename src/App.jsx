@@ -25,7 +25,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Homepage movements={movements} setMovements={setMovements}/>}/>
-        <Route path="/activity" element={<ActivityPage movements={movements} />}/>
+        <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} />}/>
         <Route path="/stats" element={<StatsPage />}/>
         <Route path="/profile" element={<ProfilePage />}/>
       </Routes>
