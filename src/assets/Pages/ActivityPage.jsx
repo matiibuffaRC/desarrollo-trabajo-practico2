@@ -74,7 +74,7 @@ function ActivityPage({ movements, setMovements }) {
         .sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
 
     return (
-        <div className="p-4">
+        <div className="p-4 pb-20 min-h-screen">
 
             {/* HEADER */}
             <div className="flex justify-between items-center mb-3">

@@ -1,10 +1,35 @@
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useState } from "react";
 
 function Charts({ movements }) {
+    const [mesSeleccionado, setMesSeleccionado] = useState("todos");
+    const mesesDisponibles = Array.from(
+        new Set(
+            movements.map(mov => {
+            const fecha = new Date(mov.fecha);
+            return fecha.toLocaleDateString("es-AR", {
+                month: "long",
+                year: "numeric"
+            });
+            })
+        )
+    );
     
     const data = Object.values(
         movements
-            .filter(mov => mov.tipo?.toLowerCase() === "gasto")
+            .filter(mov => {
+                if (mov.tipo?.toLowerCase() !== "gasto") return false;
+
+                if (mesSeleccionado === "todos") return true;
+
+                const fecha = new Date(mov.fecha);
+                const mesMov = fecha.toLocaleDateString("es-AR", {
+                    month: "long",
+                    year: "numeric"
+                });
+
+                return mesMov === mesSeleccionado;
+            })
             .reduce((acc, mov) => {
                 const categoria = mov.categoria || "Sin categoría";
 
@@ -26,7 +51,23 @@ function Charts({ movements }) {
 
             {/* HEADER */}
             <div className="mb-4">
-                <h2 className="font-bold text-base sm:text-lg">Gastos por categoría</h2>
+                <div className="flex justify-between items-center mb-3">
+                    <h2 className="font-bold text-lg">Gastos por categoría</h2>
+
+                    <select
+                        value={mesSeleccionado}
+                        onChange={(e) => setMesSeleccionado(e.target.value)}
+                        className="text-sm bg-gray-100 px-2 py-1 rounded"
+                    >
+                        <option value="todos">Todos</option>
+
+                        {mesesDisponibles.map((mes, i) => (
+                        <option key={i} value={mes}>
+                            {mes}
+                        </option>
+                        ))}
+                    </select>
+                </div>
                 <p className="text-xs sm:text-sm text-gray-500">
                     Total: <span className="font-semibold text-black">${total.toFixed(2)}</span>
                 </p>

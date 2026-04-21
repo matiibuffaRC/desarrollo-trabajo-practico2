@@ -5,6 +5,14 @@ import MonthlyChart from '../Components/MonthlyChart';
 function StatsPage({ movements }) {
 
     function generarDatosFake() {
+        const data = JSON.parse(localStorage.getItem("movements")) || [];
+
+        // Verificar si ya hay datos fake
+        if (data.some(mov => mov.isMock)) {
+            alert("Ya hay datos de prueba generados. Elimínalos primero si quieres generar nuevos.");
+            return;
+        }
+
         const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
         const movimientosFake = [];
@@ -19,24 +27,36 @@ function StatsPage({ movements }) {
                 movimientosFake.push({
                     id: crypto.randomUUID(),
                     monto: Math.floor(Math.random() * 5000) + 500,
-                    tipo: esGasto ? "gasto" : "ingreso",
+                    tipo: esGasto ? "Gasto" : "Ingreso", // Capitalizado
                     descripcion: esGasto ? "Gasto random" : "Ingreso random",
-                    categoria: esGasto
+                    categoria: esGasto 
                         ? categorias[Math.floor(Math.random() * categorias.length)]
                         : null,
                     fecha: new Date(
                         fechaBase.getFullYear(),
                         fechaBase.getMonth(),
                         Math.floor(Math.random() * 28) + 1
-                    ).toISOString()
+                    ).toISOString(),
+
+                    isMock: true // 🔥 CLAVE
                 });
             }
         }
 
-        localStorage.setItem("movements", JSON.stringify(movimientosFake));
+        // Combinar con datos reales
+        const reales = data.filter(mov => !mov.isMock);
+        localStorage.setItem("movements", JSON.stringify([...reales, ...movimientosFake]));
         location.reload();
     }
 
+    function eliminarDatosFake() {
+        const data = JSON.parse(localStorage.getItem("movements")) || [];
+
+        const nuevosMovimientos = data.filter(mov => !mov.isMock);
+
+        localStorage.setItem("movements", JSON.stringify(nuevosMovimientos));
+        location.reload();
+    }
     return (
         <div className="min-h-screen w-full bg-linear-to-b from-white to-[#F4F4F6] px-4 py-6 pb-24 flex flex-col items-center">
 
@@ -49,12 +69,12 @@ function StatsPage({ movements }) {
             </div>
 
             {/* BOTÓN */}
-            <div className="w-full max-w-xl mb-6">
-                <button
-                    onClick={generarDatosFake}
-                    className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition"
-                >
+            <div className="w-full max-w-xl mb-6 flex flex-col gap-3">
+                <button onClick={generarDatosFake} className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
                     📊 Generar datos de prueba
+                </button>
+                <button onClick={eliminarDatosFake} className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
+                    🧹 Limpiar datos de prueba
                 </button>
             </div>
 
