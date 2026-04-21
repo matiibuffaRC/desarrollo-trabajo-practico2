@@ -51,6 +51,7 @@ function MonthlyChart({ movements }) {
                 <Bar 
                     dataKey="total" 
                     radius={[6, 6, 0, 0]} 
+                    fill="#48e"
                 />
 
                 </BarChart>

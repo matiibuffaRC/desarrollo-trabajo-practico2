@@ -69,17 +69,17 @@ function StatsPage({ movements }) {
             </div>
 
             {/* BOTÓN */}
-            <div className="w-full max-w-xl mb-6 flex flex-col gap-3">
-                <button onClick={generarDatosFake} className="w-full flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
+            <div className="w-full max-w-xl mb-6 flex flex-col items-center gap-3">
+                <button onClick={generarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
                     📊 Generar datos de prueba
                 </button>
-                <button onClick={eliminarDatosFake} className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
+                <button onClick={eliminarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
                     🧹 Limpiar datos de prueba
                 </button>
             </div>
 
             {/* CONTENIDO */}
-            <div className="w-full max-w-xl flex flex-col gap-5">
+            <div className="w-full max-w-xl flex flex-col md:flex-row md:max-w-5xl gap-5">
 
                 <Charts movements={movements} />
 

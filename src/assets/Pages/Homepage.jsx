@@ -34,10 +34,10 @@ function Homepage({ movements, setMovements }) {
         </div>
         <div className='border border-black h-40 w-full flex flex-row gap-1 p-1 items-center justify-between'>
           <div className='border border-black rounded-xl h-full w-100'>
-
+            {/* Cuadro de relleno */}
           </div>
           <div className='border border-black rounded-xl h-full w-100'>
-
+            {/* Cuadro de relleno */}
           </div>
         </div>
       </div>
