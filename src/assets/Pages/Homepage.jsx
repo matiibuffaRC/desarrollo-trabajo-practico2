@@ -1,12 +1,16 @@
 import { useState } from 'react';
+
+// Componentes
 import PrintTotalComponent from '../Components/PrintTotalComponent';
 import MovementForm from '../Components/MovementForm';
+import ShowActivityComponent from '../Components/ShowActivityComponent';
+// 
 
 function Homepage({ movements, setMovements }) {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <section className='p-3 h-screen bg-linear-to-b from-white to-[#F4F4F6]'>
+    <section className='p-3 pb-20 min-h-screen bg-linear-to-b from-white to-[#F4F4F6]'>
       <div className='mb-5'>
         <h2>
           <span className='block text-2xl'>Hola,</span>
@@ -14,17 +18,32 @@ function Homepage({ movements, setMovements }) {
         </h2>
       </div>
 
-      <PrintTotalComponent
-        movements={movements}
-        onAddClick={() => setShowForm(true)}
-      />
+      <div className='flex flex-col items-center gap-5'>
+        <div className='w-full'>
+          <PrintTotalComponent
+            movements={movements}
+            onAddClick={() => setShowForm(true)}
+          />
 
-      {showForm && (
-        <MovementForm
-          setMovements={setMovements}
-          onClose={() => setShowForm(false)}
-        />
-      )}
+          {showForm && ( // Condicional para abrir o no el formulario 
+            <MovementForm
+              setMovements={setMovements}
+              onClose={() => setShowForm(false)}
+            />
+          )}
+        </div>
+        <div className='border border-black h-40 w-full flex flex-row gap-1 p-1 items-center justify-between'>
+          <div className='border border-black rounded-xl h-full w-100'>
+
+          </div>
+          <div className='border border-black rounded-xl h-full w-100'>
+
+          </div>
+        </div>
+      </div>
+      <div className='mt-5'> {/* Contenedor de la actividad reciente */}
+        <ShowActivityComponent movements={movements}/>
+      </div>
     </section>
   );
 }
