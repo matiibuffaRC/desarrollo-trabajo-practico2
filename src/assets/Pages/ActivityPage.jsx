@@ -4,6 +4,7 @@ import MovementForm from "../Components/MovementForm";
 function ActivityPage({ movements, setMovements }) {
     const [categoriaFiltro, setCategoriaFiltro] = useState("todas");
     const [fechaFiltro, setFechaFiltro] = useState("todas");
+    const [tipoFiltro, setTipoFiltro] = useState("todos"); // ✅ nuevo filtro
     const [showForm, setShowForm] = useState(false);
     const [movementToEdit, setMovementToEdit] = useState(null);
     const [menuAbiertoId, setMenuAbiertoId] = useState(null);
@@ -36,6 +37,13 @@ function ActivityPage({ movements, setMovements }) {
     // 🔎 filtros
     const movimientosFiltrados = movements
         .filter(mov => {
+
+            // ✅ filtro por tipo
+            if (tipoFiltro !== "todos" && mov.tipo !== tipoFiltro) {
+                return false;
+            }
+
+            // ✅ filtro por categoría (solo gastos)
             if (categoriaFiltro !== "todas") {
                 if (mov.tipo !== "Gasto") return false;
                 if (mov.categoria !== categoriaFiltro) return false;
@@ -82,28 +90,27 @@ function ActivityPage({ movements, setMovements }) {
             </div>
 
             {/* FILTROS */}
-            <div className="flex gap-2 mb-4 flex-wrap">
-                <select 
-                    value={categoriaFiltro} 
-                    onChange={(e) => setCategoriaFiltro(e.target.value)}
-                    className="p-2 rounded shadow"
-                >
-                    <option value="todas">Todas las categorías</option>
+            <div className="flex gap-2 mb-4 w-full">
+                <select value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value)}className="flex-1 min-w-0 p-2 rounded shadow">
+                    <option value="todos">Todos</option>
+                    <option value="Ingreso">Ingresos</option>
+                    <option value="Gasto">Gastos</option>
+                </select>
+
+                <select value={categoriaFiltro} onChange={(e) => setCategoriaFiltro(e.target.value)}className="flex-1 min-w-0 p-2 rounded shadow">
+                    <option value="todas">Todas</option>
                     {categorias.map((cat, i) => (
                         <option key={i} value={cat}>{cat}</option>
                     ))}
                 </select>
 
-                <select 
-                    value={fechaFiltro} 
-                    onChange={(e) => setFechaFiltro(e.target.value)}
-                    className="p-2 rounded shadow"
-                >
+                <select value={fechaFiltro} onChange={(e) => setFechaFiltro(e.target.value)}className="flex-1 min-w-0 p-2 rounded shadow">
                     <option value="todas">Todas</option>
                     <option value="hoy">Hoy</option>
-                    <option value="semana">Últimos 7 días</option>
-                    <option value="mes">Este mes</option>
+                    <option value="semana">7 días</option>
+                    <option value="mes">Mes</option>
                 </select>
+
             </div>
 
             {/* LISTA */}
@@ -113,17 +120,17 @@ function ActivityPage({ movements, setMovements }) {
                 movimientosFiltrados.map(mov => (
                     <div key={mov.id} className="relative">
 
-                        {/* ITEM CLICKEABLE */}
+                        {/* ITEM */}
                         <div
                             onClick={(e) => {
-                                e.stopPropagation(); // 🔥 evita cierre instantáneo
+                                e.stopPropagation();
                                 setMenuAbiertoId(menuAbiertoId === mov.id ? null : mov.id);
                             }}
                             className="bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow mb-2 cursor-pointer active:scale-[0.98] transition"
                         >
                             <div>
                                 <h2 className="text-md font-bold">{mov.descripcion}</h2>
-                                {mov.tipo === "gasto" && (
+                                {mov.tipo === "Gasto" && (
                                     <p className="text-sm text-gray-500">{mov.categoria}</p>
                                 )}
                             </div>
@@ -144,7 +151,10 @@ function ActivityPage({ movements, setMovements }) {
 
                         {/* MENU */}
                         {menuAbiertoId === mov.id && (
-                            <div onClick={(e) => e.stopPropagation()} className="absolute right-1 top-18 bg-white rounded shadow-md w-32 z-50 animate-dropdown origin-top-right" >
+                            <div 
+                                onClick={(e) => e.stopPropagation()} 
+                                className="absolute right-1 top-18 bg-white rounded shadow-md w-32 z-50 animate-dropdown origin-top-right"
+                            >
                                 <button
                                     onClick={() => {
                                         setMovementToEdit(mov);

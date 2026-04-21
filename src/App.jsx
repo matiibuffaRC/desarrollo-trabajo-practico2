@@ -26,7 +26,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Homepage movements={movements} setMovements={setMovements}/>}/>
         <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} />}/>
-        <Route path="/stats" element={<StatsPage />}/>
+        <Route path="/stats" element={<StatsPage movements={movements} />}/>
         <Route path="/profile" element={<ProfilePage />}/>
       </Routes>
       <FooterComponent></FooterComponent>
