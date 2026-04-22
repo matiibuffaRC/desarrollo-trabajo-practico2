@@ -1,17 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Componentes
 import PrintTotalComponent from '../Components/PrintTotalComponent';
 import MovementForm from '../Components/MovementForm';
 import ShowActivityComponent from '../Components/ShowActivityComponent';
+import MonthlyLimitTracker from '../Components/MonthlyLimitTracker';
 // 
 
 function Homepage({ movements, setMovements }) {
   const [showForm, setShowForm] = useState(false);
+  const [monthlyLimit, setMonthlyLimit] = useState(() => {
+    const saved = localStorage.getItem('monthlyLimit');
+    return saved ? Number(saved) : 5000;
+  });
+
+  // Calcular gastos del mes actual
+  const calculateMonthlyExpenses = () => {
+    const now = new Date();
+    const currentMonth = now.getMonth();
+    const currentYear = now.getFullYear();
+
+    return movements.reduce((total, mov) => {
+      if (mov.tipo !== 'Gasto') return total;
+
+      const movDate = new Date(mov.fecha);
+      if (movDate.getMonth() === currentMonth && movDate.getFullYear() === currentYear) {
+        return total + mov.monto;
+      }
+
+      return total;
+    }, 0);
+  };
+
+  const totalExpenses = calculateMonthlyExpenses();
 
   return (
     <section className='flex flex-col items-center bg-linear-to-b from-white to-[#F4F4F6] md:pl-45'>
-      <div className=' p-3 w-screen pb-20 min-h-screen md:max-w-xl'>
+      <div className='md:pt-10 p-3 w-screen pb-20 min-h-screen md:max-w-xl'>
         <div className='mb-5'>
           <h2>
             <span className='sora block text-2xl'>Hola,</span>
@@ -33,13 +58,12 @@ function Homepage({ movements, setMovements }) {
               />
             )}
           </div>
-          <div className='border border-black h-40 w-full flex flex-row gap-1 p-1 items-center justify-between'>
-            <div className='border border-black rounded-xl h-full w-100'>
-              {/* Cuadro de relleno */}
-            </div>
-            <div className='border border-black rounded-xl h-full w-100'>
-              {/* Cuadro de relleno */}
-            </div>
+          <div className='w-full'>
+            <MonthlyLimitTracker
+              monthlyLimit={monthlyLimit}
+              setMonthlyLimit={setMonthlyLimit}
+              totalExpenses={totalExpenses}
+            />
           </div>
         </div>
         <div className='mt-5'> {/* Contenedor de la actividad reciente */}
