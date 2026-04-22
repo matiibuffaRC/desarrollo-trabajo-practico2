@@ -112,23 +112,18 @@ function ActivityPage({ movements, setMovements }) {
                 {/* LISTA */}
                 {movimientosFiltrados.length === 0 ? (
                     <p className="text-gray-500 inter">No hay movimientos</p>
-                ) : (
+                    ) : (
                     movimientosFiltrados.map(mov => (
                         <div key={mov.id} className="relative">
-
                             {/* ITEM */}
-                            <div
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setMenuAbiertoId(menuAbiertoId === mov.id ? null : mov.id);
-                                }}
-                                className="bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow mb-2 cursor-pointer active:scale-[0.98] transition"
-                            >
+                            <div onClick={(e) => {e.stopPropagation(); setMenuAbiertoId(menuAbiertoId === mov.id ? null : mov.id); }} className="bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow mb-2 cursor-pointer active:scale-[0.98] transition">
                                 <div>
                                     <h2 className="sora text-md font-bold">{mov.descripcion}</h2>
-                                    {mov.tipo === "Gasto" && (
-                                        <p className="inter text-sm text-gray-500">{mov.categoria}</p>
-                                    )}
+                                        {mov.tipo === "Gasto" && (
+                                            <p className="inter text-sm text-gray-500">
+                                                {mov.categoria}
+                                            </p>
+                                        )}
                                 </div>
 
                                 <div className="flex flex-col items-end">
@@ -147,28 +142,11 @@ function ActivityPage({ movements, setMovements }) {
 
                             {/* MENU */}
                             {menuAbiertoId === mov.id && (
-                                <div 
-                                    onClick={(e) => e.stopPropagation()} 
-                                    className="absolute right-1 top-18 bg-white rounded shadow-md w-32 z-50 animate-dropdown origin-top-right"
-                                >
-                                    <button
-                                        onClick={() => {
-                                            setMovementToEdit(mov);
-                                            setShowForm(true);
-                                            setMenuAbiertoId(null);
-                                        }}
-                                        className="inter hover:cursor-pointer block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
-                                    >
+                                <div onClick={(e) => e.stopPropagation()} className="absolute right-1 top-18 bg-white rounded shadow-md w-32 z-50 animate-dropdown origin-top-right">
+                                    <button onClick={() => {setMovementToEdit(mov); setShowForm(true); setMenuAbiertoId(null);}} className="inter hover:cursor-pointer block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                                         ✏️ Editar
                                     </button>
-
-                                    <button
-                                        onClick={() => {
-                                            handleDelete(mov.id);
-                                            setMenuAbiertoId(null);
-                                        }}
-                                        className="inter hover:cursor-pointer block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm text-red-500"
-                                    >
+                                    <button onClick={() => {handleDelete(mov.id);setMenuAbiertoId(null); }} className="inter hover:cursor-pointer block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm text-red-500">
                                         🗑️ Borrar
                                     </button>
                                 </div>
@@ -177,16 +155,9 @@ function ActivityPage({ movements, setMovements }) {
                     ))
                 )}
 
-                {/* FORM */}
+                {/* Formulario */}
                 {showForm && (
-                    <MovementForm
-                        setMovements={setMovements}
-                        onClose={() => {
-                            setShowForm(false);
-                            setMovementToEdit(null);
-                        }}
-                        movementToEdit={movementToEdit}
-                    />
+                    <MovementForm setMovements={setMovements} onClose={() => {setShowForm(false);setMovementToEdit(null);}}movementToEdit={movementToEdit}/>
                 )}
             </div>
         </div>

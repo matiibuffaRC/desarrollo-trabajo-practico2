@@ -15,7 +15,7 @@ function StatsPage({ movements }) {
 
         const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
-        const movimientosFake = [];
+        const movimientosFake = [];s
 
         for (let i = 0; i < 6; i++) {
             const fechaBase = new Date();
@@ -80,11 +80,8 @@ function StatsPage({ movements }) {
 
                 {/* CONTENIDO */}
                 <div className="w-full max-w-xl flex flex-col md:flex-row md:max-w-5xl gap-2">
-
                     <Charts movements={movements} />
-
                     <MonthlyChart movements={movements} />
-
                 </div>
             </div>
         </div>

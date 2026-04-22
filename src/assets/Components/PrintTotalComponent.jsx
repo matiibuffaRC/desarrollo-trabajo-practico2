@@ -12,8 +12,12 @@ function PrintTotalComponent({ movements, onAddClick }) {
         <div className='shadow-md rounded-3xl bg-linear-to-l from-[#AFACF4] to-[#F3EDEB] flex flex-col justify-center items-center px-5 py-3'>
             <div className='flex flex-row justify-between items-center w-full'>
                 <div>
-                    <h2 className='text-sm text-gray-700'>Dinero disponible</h2>
-                    <h3 className={`font-bold text-2xl ${total < 0? "text-red-500" : "text-black"}`}>${total}</h3>
+                    <h2 className='text-sm text-gray-700'>
+                        Dinero disponible
+                        </h2>
+                    <h3 className={`font-bold text-2xl ${total < 0? "text-red-500" : "text-black"}`}>
+                        ${total}
+                    </h3>
                 </div>
 
                 <button onClick={onAddClick} className="h-7 w-7 hover:cursor-pointer bg-white rounded-full flex items-center justify-center shadow hover:bg-gray-100 active:scale-95 transition" >

@@ -92,23 +92,19 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
     return (
         <div className={`fixed inset-0 flex items-end justify-center transition-opacity duration-300 ${show ? "bg-black/40 opacity-100" : "bg-black/0 opacity-0"}`}>
             <form onSubmit={handleSubmit} className={`ml-45 bg-white h-1/2 w-full md:max-w-xl p-5 rounded-t-2xl flex flex-col gap-3 transform transition-all duration-300 ${show ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}>
-                
-                <h2 className="font-bold text-lg">Nuevo movimiento</h2>
-
+                <h2 className="font-bold text-lg">
+                    Nuevo movimiento
+                    </h2>
                 <input type="number" value={monto} onChange={(e) => setMonto(e.target.value)} placeholder="Monto" className="border p-2 rounded"/>
-
                 <input type="text" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} placeholder="Descripción (opcional)" className="border p-2 rounded"/>
-
-                <select value={tipo} onChange={(e) => {
-                        setTipo(e.target.value);
-                        setCategoria(""); // reset categoría si cambia tipo
-                    }} 
-                    className="border p-2 rounded">
-                    <option value="ingreso">Ingreso</option>
-                    <option value="gasto">Gasto</option>
+                <select value={tipo} onChange={(e) => {setTipo(e.target.value); setCategoria("");}} className="border p-2 rounded">
+                    <option value="ingreso">
+                        Ingreso
+                    </option>
+                    <option value="gasto">
+                        Gasto
+                        </option>
                 </select>
-
-                
                 {tipo === "gasto" && (
                     <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className="border p-2 rounded">
                         <option value="">Seleccionar categoría</option>
@@ -117,11 +113,9 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
                         ))}
                     </select>
                 )}
-
                 <button type="submit" className="bg-black hover:cursor-pointer text-white py-2 rounded-xl">
                     Agregar
                 </button>
-
                 <button type="button" onClick={handleClose} className="hover:cursor-pointer text-sm text-gray-500">
                     Cancelar
                 </button>

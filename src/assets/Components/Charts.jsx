@@ -48,23 +48,16 @@ function Charts({ movements }) {
 
     return (
         <div className="bg-white w-full p-4 sm:p-5 rounded-2xl shadow-md">
-
-            {/* HEADER */}
             <div className="mb-4">
                 <div className="flex justify-between items-center mb-3">
-                    <h2 className="sora font-bold text-lg">Gastos por categoría</h2>
-
-                    <select
-                        value={mesSeleccionado}
-                        onChange={(e) => setMesSeleccionado(e.target.value)}
-                        className="inter text-sm bg-gray-100 pl-2 py-1 rounded"
-                    >
+                    <h2 className="sora font-bold text-sm">Gastos por categoría</h2>
+                    {/* Filtrado por meses */}
+                    <select value={mesSeleccionado} onChange={(e) => setMesSeleccionado(e.target.value)} className="inter text-sm bg-gray-100 pl-2 py-1 rounded">
                         <option value="todos">Todos</option>
-
                         {mesesDisponibles.map((mes, i) => (
-                        <option key={i} value={mes} className="inter">
-                            {mes}
-                        </option>
+                            <option key={i} value={mes} className="inter">
+                                {mes}
+                            </option>
                         ))}
                     </select>
                 </div>
@@ -77,62 +70,49 @@ function Charts({ movements }) {
                 <p className="inter text-gray-500">No hay datos</p>
             ) : (
                 <>
-                    {/* 📊 GRÁFICO */}
-                    <div className="w-full h-52 sm:h-64">
+                    {/* Gráfico */}
+                    <div className="w-full h-52 sm:h-64 bg-linear-to-bl from-[#AFACF4] to-[#F3EDEB] p-3 rounded-3xl shadow">
                         <ResponsiveContainer>
                             <PieChart>
-                                <Pie
-                                    data={data}
-                                    dataKey="value"
-                                    nameKey="name"
-                                    outerRadius="80%"
-                                    paddingAngle={2}
-                                    label={window.innerWidth > 640 
-                                        ? ({ name, value }) => `${name}: $${value.toFixed(0)}`
-                                        : false // ❌ ocultamos en mobile
-                                    }
-                                >
+                                <Pie data={data} dataKey="value" nameKey="name" outerRadius="80%" paddingAngle={2}>
                                     {data.map((entry, index) => (
                                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
-
-                                <Tooltip 
-                                    formatter={(value) => `$${value.toFixed(2)}`}
-                                />
+                                <Tooltip formatter={(value) => `$${value.toFixed(2)}`}/>
                             </PieChart>
                         </ResponsiveContainer>
                     </div>
 
-                    {/* 📋 LEYENDA */}
+                    {/* Resumen del grafíco (Leer documentación para entender)*/}
                     <div className="mt-4 flex flex-col gap-2">
                         {data.map((item, index) => {
                             const porcentaje = ((item.value / total) * 100).toFixed(1);
+                                return (
+                                    <div 
+                                        key={index} 
+                                        className="inter flex justify-between items-center text-xs sm:text-sm bg-gray-50 px-3 py-2 rounded-lg"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <div 
+                                                className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
+                                                style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                                            />
+                                            <span className="font-medium">{item.name}</span>
+                                        </div>
 
-                            return (
-                                <div 
-                                    key={index} 
-                                    className="inter flex justify-between items-center text-xs sm:text-sm bg-gray-50 px-3 py-2 rounded-lg"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <div 
-                                            className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
-                                            style={{ backgroundColor: COLORS[index % COLORS.length] }}
-                                        />
-                                        <span className="font-medium">{item.name}</span>
+                                        <div className="text-right">
+                                            <p className="font-semibold">
+                                                ${item.value.toFixed(2)}
+                                            </p>
+                                            <p className="inter text-[10px] sm:text-xs text-gray-500">
+                                                {porcentaje}%
+                                            </p>
+                                        </div>
                                     </div>
-
-                                    <div className="text-right">
-                                        <p className="font-semibold">
-                                            ${item.value.toFixed(2)}
-                                        </p>
-                                        <p className="inter text-[10px] sm:text-xs text-gray-500">
-                                            {porcentaje}%
-                                        </p>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                                );
+                            })
+                        }
                     </div>
                 </>
             )}

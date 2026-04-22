@@ -56,7 +56,7 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
                                 </p>
                             </div>
                         <div className={`p-4 rounded-xl ${isExceeded ? 'bg-red-50' : 'bg-green-50'}`}>
-                            <p className='inter text-sm text-gray-600 mb-1'>
+                            <p className='inter text-md md:text-lg text-gray-600 mb-1'>
                                 {isExceeded ? 'Excedido' : 'Falta'}
                             </p>
                             <p className={`sora font-bold text-md md:text-lg ${isExceeded ? 'text-red-600' : 'text-green-600'}`}>
@@ -89,7 +89,7 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
                         )}
                     </div>
                 </div>
-                <div className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div onClick={(e) => e.stopPropagation()} className={`transition-all duration-300 overflow-hidden ${isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
                     <div className='pt-6 border-t border-gray-200'>
                         <div className='mb-5'>
                             <h3 className='sora font-bold text-lg mb-2'>Editar Límite</h3>
@@ -139,4 +139,3 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
 }
 
 export default MonthlyLimitTracker;
-
