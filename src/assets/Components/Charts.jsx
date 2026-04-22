@@ -57,7 +57,7 @@ function Charts({ movements }) {
                     <select
                         value={mesSeleccionado}
                         onChange={(e) => setMesSeleccionado(e.target.value)}
-                        className="text-sm bg-gray-100 px-2 py-1 rounded"
+                        className="text-sm bg-gray-100 pl-2 py-1 rounded"
                     >
                         <option value="todos">Todos</option>
 

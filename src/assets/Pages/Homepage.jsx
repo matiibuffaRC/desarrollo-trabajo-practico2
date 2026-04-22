@@ -10,8 +10,8 @@ function Homepage({ movements, setMovements }) {
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <section className='flex flex-col items-center bg-linear-to-b from-white to-[#F4F4F6]'>
-      <div className='p-3 pb-20 min-h-screen md:max-w-3xl'>
+    <section className='flex flex-col items-center bg-linear-to-b from-white to-[#F4F4F6] md:pl-20'>
+      <div className=' p-3 w-screen pb-20 min-h-screen md:max-w-xl'>
         <div className='mb-5'>
           <h2>
             <span className='block text-2xl'>Hola,</span>

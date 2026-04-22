@@ -58,33 +58,34 @@ function StatsPage({ movements }) {
         location.reload();
     }
     return (
-        <div className="min-h-screen w-full bg-linear-to-b from-white to-[#F4F4F6] px-4 py-6 pb-24 flex flex-col items-center">
+        <div className="min-h-screen w-full bg-linear-to-b from-white to-[#F4F4F6] px-4 py-6 pb-24 flex flex-col items-center md:px-20">
+            <div className="md:pl-20 w-full md:max-w-5xl flex flex-col items-center gap-2 py-5">
+                {/* HEADER */}
+                <div className="w-full max-w-xl mb-6">
+                    <h1 className="text-2xl font-bold text-gray-800">Estadísticas</h1>
+                    <p className="text-sm text-gray-500">
+                        Estos fueron tus gastos los ultimos meses.
+                    </p>
+                </div>
 
-            {/* HEADER */}
-            <div className="w-full max-w-xl mb-6">
-                <h1 className="text-2xl font-bold text-gray-800">Estadísticas</h1>
-                <p className="text-sm text-gray-500">
-                    Estos fueron tus gastos los ultimos meses.
-                </p>
-            </div>
+                {/* BOTÓN */}
+                <div className="w-full max-w-xl mb-6 flex flex-col items-center gap-3">
+                    <button onClick={generarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
+                        📊 Generar datos de prueba
+                    </button>
+                    <button onClick={eliminarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
+                        🧹 Limpiar datos de prueba
+                    </button>
+                </div>
 
-            {/* BOTÓN */}
-            <div className="w-full max-w-xl mb-6 flex flex-col items-center gap-3">
-                <button onClick={generarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
-                    📊 Generar datos de prueba
-                </button>
-                <button onClick={eliminarDatosFake} className="w-full md:max-w-sm flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
-                    🧹 Limpiar datos de prueba
-                </button>
-            </div>
+                {/* CONTENIDO */}
+                <div className="w-full max-w-xl flex flex-col md:flex-row md:max-w-5xl gap-5">
 
-            {/* CONTENIDO */}
-            <div className="w-full max-w-xl flex flex-col md:flex-row md:max-w-5xl gap-5">
+                    <Charts movements={movements} />
 
-                <Charts movements={movements} />
+                    <MonthlyChart movements={movements} />
 
-                <MonthlyChart movements={movements} />
-
+                </div>
             </div>
         </div>
     );
