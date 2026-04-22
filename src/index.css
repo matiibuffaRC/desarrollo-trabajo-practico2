@@ -14,3 +14,15 @@
 .animate-dropdown {
   animation: dropdownFade 0.18s ease-out;
 }
+
+
+.sora {
+  font-family: "Sora", sans-serif;
+  font-optical-sizing: auto;
+}
+
+
+.inter{
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+}

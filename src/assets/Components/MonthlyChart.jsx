@@ -69,7 +69,7 @@ function MonthlyChart({ movements }) {
                         </ResponsiveContainer>
                     </div>
 
-                    <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1 gap-3 text-sm">
+                    <div className="mt-15 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-1 gap-3 text-sm">
                         
                         <div className="bg-gray-100 p-2 rounded-lg">
                             <p className="text-gray-500">Total</p>

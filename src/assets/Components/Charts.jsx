@@ -52,29 +52,29 @@ function Charts({ movements }) {
             {/* HEADER */}
             <div className="mb-4">
                 <div className="flex justify-between items-center mb-3">
-                    <h2 className="font-bold text-lg">Gastos por categoría</h2>
+                    <h2 className="sora font-bold text-lg">Gastos por categoría</h2>
 
                     <select
                         value={mesSeleccionado}
                         onChange={(e) => setMesSeleccionado(e.target.value)}
-                        className="text-sm bg-gray-100 pl-2 py-1 rounded"
+                        className="inter text-sm bg-gray-100 pl-2 py-1 rounded"
                     >
                         <option value="todos">Todos</option>
 
                         {mesesDisponibles.map((mes, i) => (
-                        <option key={i} value={mes}>
+                        <option key={i} value={mes} className="inter">
                             {mes}
                         </option>
                         ))}
                     </select>
                 </div>
                 <p className="text-xs sm:text-sm text-gray-500">
-                    Total: <span className="font-semibold text-black">${total.toFixed(2)}</span>
+                    Total: <span className="inter font-semibold text-black">${total.toFixed(2)}</span>
                 </p>
             </div>
 
             {data.length === 0 ? (
-                <p className="text-gray-500">No hay datos</p>
+                <p className="inter text-gray-500">No hay datos</p>
             ) : (
                 <>
                     {/* 📊 GRÁFICO */}
@@ -112,7 +112,7 @@ function Charts({ movements }) {
                             return (
                                 <div 
                                     key={index} 
-                                    className="flex justify-between items-center text-xs sm:text-sm bg-gray-50 px-3 py-2 rounded-lg"
+                                    className="inter flex justify-between items-center text-xs sm:text-sm bg-gray-50 px-3 py-2 rounded-lg"
                                 >
                                     <div className="flex items-center gap-2">
                                         <div 
@@ -126,7 +126,7 @@ function Charts({ movements }) {
                                         <p className="font-semibold">
                                             ${item.value.toFixed(2)}
                                         </p>
-                                        <p className="text-[10px] sm:text-xs text-gray-500">
+                                        <p className="inter text-[10px] sm:text-xs text-gray-500">
                                             {porcentaje}%
                                         </p>
                                     </div>
