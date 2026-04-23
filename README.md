@@ -29,3 +29,15 @@ Funcionalidades con las que cuentas:
     - Combinaciones de filtrados de los anteriores criterios.
     - Posibilidad de edición o borrado de una transacción en particular.
     - Funcionalidad de borrado completo de todas las transacciones.
+- Sección de estadísticas donde encontramos:
+    - Generador de transacciones randoms para poder utilizar y simular funcionamiento de los gráficos.
+    - Un gráfico torta donde podemos ver los gastos por categorías.
+          - Filtrado por meses
+    - Un gráfico de barras que muestra el total de gastos por mes.
+          - Resumen con estadísticas considerables por mes.
+
+Potenciales mejoras para la aplicación:
+    - Funcionalidad del modo claro/oscuro.
+    - Conexión de una base de datos.
+    - Posibilidad de crear usuarios para más personas utilicen la aplicación.
+    - Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones.
