@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MovementForm from "../Components/MovementForm";
 
-function ActivityPage({ movements, setMovements }) {
+function ActivityPage({ movements, setMovements, total }) {
     const [categoriaFiltro, setCategoriaFiltro] = useState("todas");
     const [fechaFiltro, setFechaFiltro] = useState("todas");
     const [tipoFiltro, setTipoFiltro] = useState("todos"); 
@@ -81,7 +81,7 @@ function ActivityPage({ movements, setMovements }) {
 
     return (
         <div className="pb-20 min-h-screen flex flex-col items-center md:pl-20">
-            <div className="w-full md:max-w-xl pl-20 p-5 py-10">
+            <div className="w-full md:max-w-xl p-5 py-10">
 
                 {/* HEADER */}
                 <div className="flex justify-between items-center mb-3">
@@ -199,6 +199,7 @@ function ActivityPage({ movements, setMovements }) {
                             setMovementToEdit(null);
                         }}
                         movementToEdit={movementToEdit}
+                        total={total}
                     />
                 )}
             </div>

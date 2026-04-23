@@ -7,7 +7,7 @@ import ShowActivityComponent from '../Components/ShowActivityComponent';
 import MonthlyLimitTracker from '../Components/MonthlyLimitTracker';
 // 
 
-function Homepage({ movements, setMovements }) {
+function Homepage({ movements, setMovements, total }) {
   const [showForm, setShowForm] = useState(false);
   const [monthlyLimit, setMonthlyLimit] = useState(() => {
     const saved = localStorage.getItem('monthlyLimit');
@@ -55,6 +55,7 @@ function Homepage({ movements, setMovements }) {
               <MovementForm
                 setMovements={setMovements}
                 onClose={() => setShowForm(false)}
+                total={total}
               />
             )}
           </div>

@@ -16,6 +16,11 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Calcula el saldo disponible
+  const total = movements.reduce((acc, mov) => {
+    return mov.tipo === "Ingreso" ? acc + mov.monto : acc - mov.monto;
+  }, 0);
+
   // Guarda en localStorage cada vez que movements cambie
   useEffect(() => {
     localStorage.setItem('movements', JSON.stringify(movements));
@@ -24,8 +29,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Homepage movements={movements} setMovements={setMovements}/>}/>
-        <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} />}/>
+        <Route path="/" element={<Homepage movements={movements} setMovements={setMovements} total={total}/>}/>
+        <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} total={total} />}/>
         <Route path="/stats" element={<StatsPage movements={movements} />}/>
         <Route path="/profile" element={<ProfilePage />}/>
       </Routes>

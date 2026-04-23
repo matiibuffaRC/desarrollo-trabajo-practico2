@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function MovementForm({ setMovements, onClose, movementToEdit }) {
+function MovementForm({ setMovements, onClose, movementToEdit, total }) {
     const [monto, setMonto] = useState("");
     const [tipo, setTipo] = useState("ingreso");
     const [descripcion, setDescripcion] = useState("");
     const [categoria, setCategoria] = useState("");
     const [show, setShow] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [currentSaldo, setCurrentSaldo] = useState(0);
 
     const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
@@ -32,28 +34,14 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
         setTimeout(onClose, 300);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (!monto || Number(monto) <= 0) {
-            alert("Ingresá un monto válido");
-            return;
-        }
-
-        // ✅ Validar categoría si es gasto
-        if (tipo === "gasto" && !categoria) {
-            alert("Seleccioná una categoría");
-            return;
-        }
-
-        const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1); // Convertimos la primer letra en mayuscula y acoplamos con el resto de la cadena
-
-        const descripcionFinal = // Si no ponemos nada buscamos de definir si es un ingreso o un gasto automaticamente
-            descripcion.trim() !== ""
-                ? descripcion
-                : tipoCapitalizado === "Ingreso"
-                ? "Ingreso"
-                : "Gasto";
+    const addMovement = (force = false) => {
+        // Validación ya hecha en handleSubmit
+        const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+        const descripcionFinal = descripcion.trim() !== ""
+            ? descripcion
+            : tipoCapitalizado === "Ingreso"
+            ? "Ingreso"
+            : "Gasto";
 
         if (movementToEdit) {
             // Editar existente
@@ -85,6 +73,34 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
         setCategoria("");
 
         handleClose();
+        return true;
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!monto || Number(monto) <= 0) {
+            alert("Ingresá un monto válido");
+            return;
+        }
+
+        // ✅ Validar categoría si es gasto
+        if (tipo === "gasto" && !categoria) {
+            alert("Seleccioná una categoría");
+            return;
+        }
+
+        let saldoDisponible = total;
+        if (movementToEdit) {
+            saldoDisponible -= movementToEdit.tipo === "Gasto" ? movementToEdit.monto : -movementToEdit.monto;
+        }
+        if (tipo === "gasto" && Number(monto) > saldoDisponible) {
+            setCurrentSaldo(saldoDisponible);
+            setShowModal(true);
+            return;
+        }
+
+        addMovement(true); // force=true para proceder
     };
 
     return (
@@ -119,6 +135,34 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
                     Cancelar
                 </button>
             </form>
+
+            {showModal && (
+                <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-4">
+                        <h3 className="font-bold text-lg mb-4">Advertencia</h3>
+                        <p className="mb-4">
+                            Estás intentando registrar un gasto de ${Number(monto)} pero solo tienes ${currentSaldo} disponible. ¿Deseas continuar de todos modos?
+                        </p>
+                        <div className="flex gap-3 justify-end">
+                            <button
+                                onClick={() => setShowModal(false)}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={() => {
+                                    addMovement(true);
+                                    setShowModal(false);
+                                }}
+                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                            >
+                                Continuar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
