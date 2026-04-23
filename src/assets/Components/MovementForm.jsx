@@ -13,7 +13,6 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
         setTimeout(() => setShow(true), 10);
     }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (movementToEdit) {
             setMonto(movementToEdit.monto.toString());
@@ -47,9 +46,9 @@ function MovementForm({ setMovements, onClose, movementToEdit }) {
             return;
         }
 
-        const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+        const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1); // Convertimos la primer letra en mayuscula y acoplamos con el resto de la cadena
 
-        const descripcionFinal =
+        const descripcionFinal = // Si no ponemos nada buscamos de definir si es un ingreso o un gasto automaticamente
             descripcion.trim() !== ""
                 ? descripcion
                 : tipoCapitalizado === "Ingreso"

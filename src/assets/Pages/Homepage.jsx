@@ -36,7 +36,7 @@ function Homepage({ movements, setMovements }) {
 
   return (
     <section className='flex flex-col items-center bg-linear-to-b from-white to-[#F4F4F6] md:pl-45'>
-      <div className='md:pt-10 p-3 w-screen pb-20 min-h-screen md:max-w-xl'>
+      <div className='md:pt-10 p-3 w-full pb-20 min-h-screen md:max-w-xl'>
         <div className='mb-5'>
           <h2>
             <span className='sora block text-2xl'>Hola,</span>

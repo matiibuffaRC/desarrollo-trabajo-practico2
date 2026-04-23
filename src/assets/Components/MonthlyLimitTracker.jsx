@@ -125,11 +125,11 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
                             </p>
                         </div>
                         {/* Botones */}
-                        <div className='flex gap-3'>
-                            <button onClick={handleSaveLimit} className='flex-1 bg-linear-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 hover:cursor-pointer active:scale-95 transition-all sora shadow-md hover:shadow-lg'>
+                        <div className='flex gap-3 px-10'>
+                            <button onClick={handleSaveLimit} className='flex-1 text-sm bg-linear-to-r from-green-500 to-green-600 text-white font-bold py-2 rounded-lg hover:from-green-600 hover:to-green-700 hover:cursor-pointer active:scale-95 transition-all sora shadow-md hover:shadow-lg'>
                                 Guardar
                             </button>
-                            <button onClick={handleCancelEdit} className='flex-1 bg-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-400 hover:cursor-pointer active:scale-95 transition-all sora'>
+                            <button onClick={handleCancelEdit} className='flex-1 text-sm bg-gray-300 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-400 hover:cursor-pointer active:scale-95 transition-all sora'>
                                 Cancelar
                             </button>
                         </div>

@@ -9,13 +9,13 @@ function StatsPage({ movements }) {
 
         // Verificar si ya hay datos fake
         if (data.some(mov => mov.isMock)) {
-            alert("Ya hay datos de prueba generados. Elimínalos primero si quieres generar nuevos.");
+            alert("Ya hay datos de prueba generados.");
             return;
         }
 
         const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
-        const movimientosFake = [];s
+        const movimientosFake = [];
 
         for (let i = 0; i < 6; i++) {
             const fechaBase = new Date();
