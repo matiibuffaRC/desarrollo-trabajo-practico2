@@ -79,7 +79,7 @@ function StatsPage({ movements }) {
                 </div>
 
                 {/* CONTENIDO */}
-                <div className="w-full max-w-xl flex flex-col md:flex-row md:max-w-5xl gap-2">
+                <div className="w-full max-w-xl flex flex-col lg:flex-row md:max-w-5xl gap-2">
                     <Charts movements={movements} />
                     <MonthlyChart movements={movements} />
                 </div>
