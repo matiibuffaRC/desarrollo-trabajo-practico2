@@ -111,11 +111,12 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
                                 </p>
                             </div>
                         </div>
+                        {/* Sección de ingresar monto */}
                         <div className='mb-5'>
                             <label className='inter text-sm font-semibold text-gray-700 block mb-2'>
                                 Nuevo límite
                             </label>
-                            <div className='relative'>
+                            <div className='relative z-10'>
                                 <span className='absolute left-3 top-3 text-gray-500 text-lg'>$</span>
                                 <input type='number' value={editValue} onChange={(e) => setEditValue(e.target.value)} className='w-full border-2 border-gray-300 rounded-lg p-3 pl-8 focus:outline-none focus:border-blue-500 focus:bg-blue-50 transition inter' min='0' step='100' autoFocus />
                             </div>
@@ -123,6 +124,7 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
                                 {editValue > 0 ? `Te quedarían $${(editValue - totalExpenses).toFixed(2)} disponibles` : 'Ingresa un valor válido'}
                             </p>
                         </div>
+                        {/* Botones */}
                         <div className='flex gap-3'>
                             <button onClick={handleSaveLimit} className='flex-1 bg-linear-to-r from-green-500 to-green-600 text-white font-bold py-3 rounded-lg hover:from-green-600 hover:to-green-700 hover:cursor-pointer active:scale-95 transition-all sora shadow-md hover:shadow-lg'>
                                 Guardar

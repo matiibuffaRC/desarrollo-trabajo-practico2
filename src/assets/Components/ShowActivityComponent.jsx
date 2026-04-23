@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 
 function ShowActivityComponent({ movements }) {
     const printMovements = () => {
-        console.log(movements)
         return [...movements].reverse().map(mov => (
             <div key={mov.id} className='bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow'>
                 <h2 className='text-md font-bold'>{mov.descripcion}</h2>
