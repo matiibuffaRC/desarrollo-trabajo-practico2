@@ -1,16 +1,10 @@
-# React + Vite
+# Gestor de gastos
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+En el presente trabajo práctico realicé un gestor de gastos utilizando las siguientes herramientas:
 
-Currently, two official plugins are available:
+- React para el desarrollo frontend de la aplicación por componentes.
+- TailwindCSS para los estilos.
+- La librería charts para obtener gráficos en tiempo real con la información ingresada en la página.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+La idea principal fue respetar lo máximo posible las consignas y peticiones del trabajo pero buscando ir un poco más allá para poder seguir escalando este trabajo y poder
+utilizarlo como proyecto personal para mi portfolio.
