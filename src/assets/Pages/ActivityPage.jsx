@@ -117,11 +117,7 @@ function ActivityPage({ movements, setMovements, total }) {
 
                 {/* ORDENAR 👇 NUEVO */}
                 <div className="w-full mb-4">
-                    <select
-                        value={orden}
-                        onChange={(e) => setOrden(e.target.value)}
-                        className="inter w-full p-2 rounded shadow"
-                    >
+                    <select value={orden} onChange={(e) => setOrden(e.target.value)} className="inter w-full p-2 rounded shadow">
                         <option value="fecha_desc">📅 Más recientes</option>
                         <option value="fecha_asc">📅 Más antiguos</option>
                         <option value="monto_desc">💰 Mayor monto</option>
@@ -132,16 +128,10 @@ function ActivityPage({ movements, setMovements, total }) {
                 {/* LISTA */}
                 {movimientosFiltrados.length === 0 ? (
                     <p className="text-gray-500 inter">No hay movimientos</p>
-                ) : (
+                    ) : (
                     movimientosFiltrados.map(mov => (
                         <div key={mov.id} className="relative">
-                            <div
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    setMenuAbiertoId(menuAbiertoId === mov.id ? null : mov.id);
-                                }}
-                                className="bg-[#FEFEFE] flex justify-between p-3 rounded-xl shadow mb-2 cursor-pointer active:scale-[0.98] transition"
-                            >
+                            <div onClick={(e) => {e.stopPropagation(); setMenuAbiertoId(menuAbiertoId === mov.id ? null : mov.id);}} className="bg-[#FEFEFE] flex justify-between p-3 rounded-xl shadow mb-2 cursor-pointer active:scale-[0.98] transition">
                                 <div>
                                     <h2 className="sora text-md font-bold">{mov.descripcion}</h2>
                                     {mov.tipo === "Gasto" && (
@@ -165,24 +155,10 @@ function ActivityPage({ movements, setMovements, total }) {
 
                             {menuAbiertoId === mov.id && (
                                 <div className="absolute right-1 top-18 bg-white rounded shadow-md w-32 z-50 animate-dropdown">
-                                    <button
-                                        onClick={() => {
-                                            setMovementToEdit(mov);
-                                            setShowForm(true);
-                                            setMenuAbiertoId(null);
-                                        }}
-                                        className="inter block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm"
-                                    >
+                                    <button onClick={() => {setMovementToEdit(mov);setShowForm(true);setMenuAbiertoId(null);}} className="inter block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm">
                                         ✏️ Editar
                                     </button>
-
-                                    <button
-                                        onClick={() => {
-                                            handleDelete(mov.id);
-                                            setMenuAbiertoId(null);
-                                        }}
-                                        className="inter block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm text-red-500"
-                                    >
+                                    <button onClick={() => {handleDelete(mov.id); setMenuAbiertoId(null);}} className="inter block w-full text-left px-3 py-2 hover:bg-gray-100 text-sm text-red-500">
                                         🗑️ Borrar
                                     </button>
                                 </div>
@@ -192,15 +168,7 @@ function ActivityPage({ movements, setMovements, total }) {
                 )}
 
                 {showForm && (
-                    <MovementForm
-                        setMovements={setMovements}
-                        onClose={() => {
-                            setShowForm(false);
-                            setMovementToEdit(null);
-                        }}
-                        movementToEdit={movementToEdit}
-                        total={total}
-                    />
+                    <MovementForm setMovements={setMovements} onClose={() => {setShowForm(false);setMovementToEdit(null);}} movementToEdit={movementToEdit} total={total}/>
                 )}
             </div>
         </div>
