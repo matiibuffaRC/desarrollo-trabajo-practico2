@@ -32,7 +32,7 @@ function App() {
         <Route path="/" element={<Homepage movements={movements} setMovements={setMovements} total={total}/>}/>
         <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} total={total} />}/>
         <Route path="/stats" element={<StatsPage movements={movements} />}/>
-        <Route path="/profile" element={<ProfilePage />}/>
+        <Route path="/profile" element={<ProfilePage movements={movements} total={total} />}/>
       </Routes>
       <FooterComponent></FooterComponent>
     </BrowserRouter>
