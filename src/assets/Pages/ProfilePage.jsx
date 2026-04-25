@@ -50,7 +50,7 @@ function ProfilePage({ movements = [], total = 0 }) {
   };
 
   return (
-    <div className="p-4 pb-20 min-h-screen bg-gradient-to-b from-white to-[#F4F4F6]">
+    <div className="p-4 pb-20 min-h-screen bg-gradient-to-b from-white to-[#F4F4F6] md:pl-56 md:pb-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Mi Perfil</h1>

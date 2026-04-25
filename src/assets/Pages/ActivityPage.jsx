@@ -80,7 +80,7 @@ function ActivityPage({ movements, setMovements, total }) {
         });
 
     return (
-        <div className="pb-20 min-h-screen flex flex-col items-center md:pl-20">
+        <div className="pb-20 min-h-screen flex flex-col items-center md:pl-56 md:pb-0">
             <div className="w-full md:max-w-xl p-5 py-10">
 
                 {/* HEADER */}
