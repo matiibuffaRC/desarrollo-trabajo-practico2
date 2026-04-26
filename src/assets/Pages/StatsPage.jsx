@@ -16,30 +16,54 @@ function StatsPage({ movements }) {
         const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
         const movimientosFake = [];
+        let saldoActual = 0; // Rastreamos el saldo para evitar gastos imposibles
 
         for (let i = 0; i < 6; i++) {
             const fechaBase = new Date();
             fechaBase.setMonth(fechaBase.getMonth() - i);
 
             for (let j = 0; j < 8; j++) {
-                const esGasto = Math.random() > 0.3;
+                // Mayor probabilidad de ingresos (60%) que gastos (40%)
+                const esGasto = Math.random() > 0.6;
+                
+                let monto = Math.floor(Math.random() * 5000) + 500;
 
-                movimientosFake.push({
-                    id: crypto.randomUUID(),
-                    monto: Math.floor(Math.random() * 5000) + 500,
-                    tipo: esGasto ? "Gasto" : "Ingreso", // Capitalizado
-                    descripcion: esGasto ? "Gasto random" : "Ingreso random",
-                    categoria: esGasto 
-                        ? categorias[Math.floor(Math.random() * categorias.length)]
-                        : null,
-                    fecha: new Date(
-                        fechaBase.getFullYear(),
-                        fechaBase.getMonth(),
-                        Math.floor(Math.random() * 28) + 1
-                    ).toISOString(),
-
-                    isMock: true // 🔥 CLAVE
-                });
+                // Si es gasto, asegurar que no supere el saldo disponible
+                if (esGasto && monto > saldoActual) {
+                    // Si el gasto sería imposible, convertirlo a ingreso
+                    movimientosFake.push({
+                        id: crypto.randomUUID(),
+                        monto: monto,
+                        tipo: "Ingreso",
+                        descripcion: "Ingreso random",
+                        categoria: null,
+                        fecha: new Date(
+                            fechaBase.getFullYear(),
+                            fechaBase.getMonth(),
+                            Math.floor(Math.random() * 28) + 1
+                        ).toISOString(),
+                        isMock: true
+                    });
+                    saldoActual += monto;
+                } else {
+                    // Gasto válido o ingreso
+                    movimientosFake.push({
+                        id: crypto.randomUUID(),
+                        monto: monto,
+                        tipo: esGasto ? "Gasto" : "Ingreso",
+                        descripcion: esGasto ? "Gasto random" : "Ingreso random",
+                        categoria: esGasto 
+                            ? categorias[Math.floor(Math.random() * categorias.length)]
+                            : null,
+                        fecha: new Date(
+                            fechaBase.getFullYear(),
+                            fechaBase.getMonth(),
+                            Math.floor(Math.random() * 28) + 1
+                        ).toISOString(),
+                        isMock: true
+                    });
+                    saldoActual += esGasto ? -monto : monto;
+                }
             }
         }
 

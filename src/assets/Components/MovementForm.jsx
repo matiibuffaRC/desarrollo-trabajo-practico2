@@ -6,8 +6,6 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
     const [descripcion, setDescripcion] = useState("");
     const [categoria, setCategoria] = useState("");
     const [show, setShow] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [currentSaldo, setCurrentSaldo] = useState(0);
 
     const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
@@ -90,13 +88,13 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             return;
         }
 
+        // Validar que no gaste más de lo disponible
         let saldoDisponible = total;
         if (movementToEdit) {
             saldoDisponible -= movementToEdit.tipo === "Gasto" ? movementToEdit.monto : -movementToEdit.monto;
         }
         if (tipo === "gasto" && Number(monto) > saldoDisponible) {
-            setCurrentSaldo(saldoDisponible);
-            setShowModal(true);
+            alert(`No tienes suficiente saldo. Disponible: $${saldoDisponible} | Intentas gastar: $${Number(monto)}`);
             return;
         }
 
@@ -135,34 +133,6 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
                     Cancelar
                 </button>
             </form>
-
-            {showModal && (
-                <div className="fixed inset-0 z-200 flex items-center justify-center bg-black/50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-4">
-                        <h3 className="font-bold text-lg mb-4">Advertencia</h3>
-                        <p className="mb-4">
-                            Estás intentando registrar un gasto de ${Number(monto)} pero solo tienes ${currentSaldo} disponible. ¿Deseas continuar de todos modos?
-                        </p>
-                        <div className="flex gap-3 justify-end">
-                            <button
-                                onClick={() => setShowModal(false)}
-                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                onClick={() => {
-                                    addMovement(true);
-                                    setShowModal(false);
-                                }}
-                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                            >
-                                Continuar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

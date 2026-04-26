@@ -6,7 +6,7 @@ function PrintTotalComponent({ movements, onAddClick }) {
         return mov.tipo === "Ingreso"
             ? acc + mov.monto
             : acc - mov.monto;
-    }, 0); //Boludon acordate del valor inicial 0
+    }, 0);
 
     return (
         <div className='shadow-md rounded-3xl bg-linear-to-l from-[#AFACF4] to-[#F3EDEB] flex flex-col justify-center items-center px-5 py-3'>
