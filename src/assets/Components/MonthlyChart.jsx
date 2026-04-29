@@ -31,7 +31,6 @@ function MonthlyChart({ movements }) {
         }, {})
     ).sort((a, b) => a.date - b.date);
 
-    // 🔥 RESUMEN
     const totalGastos = data.reduce((acc, item) => acc + item.total, 0);
     const promedio = data.length ? totalGastos / data.length : 0;
 
@@ -52,7 +51,7 @@ function MonthlyChart({ movements }) {
                 <p className="text-gray-500">No hay datos</p>
             ) : (
                 <>
-                    {/* 📊 GRÁFICO */}
+                    
                     <div className="w-full h-56 sm:h-64 my-4 bg-linear-to-bl from-[#AFACF4] to-[#F3EDEB] p-5 rounded-2xl shadow">
                         <ResponsiveContainer className={`pr-6 pt-6`}>
                             <BarChart data={data}>

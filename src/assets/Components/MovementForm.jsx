@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
 function MovementForm({ setMovements, onClose, movementToEdit, total }) {
+    // Valores a guardar en nuevos movimientos
     const [monto, setMonto] = useState("");
     const [tipo, setTipo] = useState("ingreso");
     const [descripcion, setDescripcion] = useState("");
     const [categoria, setCategoria] = useState("");
     const [show, setShow] = useState(false);
-
+    //
     const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
 
     useEffect(() => {
@@ -21,7 +22,7 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             setCategoria(movementToEdit.categoria || "");
         } else {
             setMonto("");
-            setTipo("ingreso");
+            setTipo("ingreso"); // Por defecto vamos a dejar siempre ingreso, cualquier cosa lo modificamos
             setDescripcion("");
             setCategoria("");
         }
@@ -32,8 +33,7 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
         setTimeout(onClose, 300);
     };
 
-    const addMovement = (force = false) => {
-        // Validación ya hecha en handleSubmit
+    const addMovement = () => {
         const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1);
         const descripcionFinal = descripcion.trim() !== ""
             ? descripcion
@@ -42,9 +42,8 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             : "Gasto";
 
         if (movementToEdit) {
-            // Editar existente
             const movimientoActualizado = {
-                ...movementToEdit,
+                ...movementToEdit, 
                 monto: Number(monto),
                 tipo: tipoCapitalizado,
                 descripcion: descripcionFinal,
@@ -52,7 +51,7 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             };
             setMovements(prev => prev.map(mov => mov.id === movementToEdit.id ? movimientoActualizado : mov));
         } else {
-            // Crear nuevo
+            // Creamos uno nuevo
             const nuevoMovimiento = {
                 id: crypto.randomUUID(),
                 monto: Number(monto),
@@ -64,7 +63,7 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             setMovements(prev => [...prev, nuevoMovimiento]);
         }
 
-        // Resetear form
+        // Reseteamos form
         setMonto("");
         setTipo("ingreso");
         setDescripcion("");
@@ -82,23 +81,23 @@ function MovementForm({ setMovements, onClose, movementToEdit, total }) {
             return;
         }
 
-        // ✅ Validar categoría si es gasto
+        // Validamos que se trate de un gasto
         if (tipo === "gasto" && !categoria) {
             alert("Seleccioná una categoría");
             return;
         }
 
-        // Validar que no gaste más de lo disponible
+        // Validamos no endeudarnos
         let saldoDisponible = total;
         if (movementToEdit) {
             saldoDisponible -= movementToEdit.tipo === "Gasto" ? movementToEdit.monto : -movementToEdit.monto;
         }
         if (tipo === "gasto" && Number(monto) > saldoDisponible) {
-            alert(`No tienes suficiente saldo. Disponible: $${saldoDisponible} | Intentas gastar: $${Number(monto)}`);
+            alert(`No tienes suficiente saldo. Disponible: $${saldoDisponible} | Estas queriendo gastar: $${Number(monto)}`);
             return;
         }
 
-        addMovement(true); // force=true para proceder
+        addMovement(true);
     };
 
     return (

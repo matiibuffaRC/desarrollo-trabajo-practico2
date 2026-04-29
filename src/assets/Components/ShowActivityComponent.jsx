@@ -5,7 +5,7 @@ function ShowActivityComponent({ movements }) {
     const printMovements = () => {
         return [...movements]
             .reverse()
-            .slice(0, 3)
+            .slice(0, 3) // Mostrá entre 3 y 6 actividades no más
             .map(mov => (
                 <div key={mov.id} className='bg-[#FEFEFE] flex flex-row justify-between items-start p-3 rounded-xl shadow'>
                     <h2 className='text-md font-bold'>{mov.descripcion}</h2>

@@ -16,12 +16,12 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Calcula el saldo disponible
+  // Calculamos el saldo disponible
   const total = movements.reduce((acc, mov) => {
     return mov.tipo === "Ingreso" ? acc + mov.monto : acc - mov.monto;
   }, 0);
 
-  // Guarda en localStorage cada vez que movements cambie
+  // Guardamos en localStorage cada vez que movements cambie
   useEffect(() => {
     localStorage.setItem('movements', JSON.stringify(movements));
   }, [movements]);

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 
 function ProfilePage({ movements = [], total = 0 }) {
-  // Calcula estadísticas financieras reales
+  // Recalculamos todo ante cambios en los movimientos. Guardamos un valor para no renderizar innecesariamente
   const stats = useMemo(() => {
     const ingresos = movements
       .filter(mov => mov.tipo === 'Ingreso')
@@ -51,15 +51,19 @@ function ProfilePage({ movements = [], total = 0 }) {
 
   return (
     <div className="p-4 pb-20 min-h-screen bg-gradient-to-b from-white to-[#F4F4F6] md:pl-56 md:pb-8">
+      
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Mi Perfil</h1>
-        <p className="text-gray-600 text-sm md:text-base mt-2">Gestiona tu información personal</p>
+        <p className="text-gray-600 text-sm md:text-base mt-2">
+          Gestiona tu información personal
+        </p>
       </div>
 
       {/* Profile Card */}
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 max-w-2xl mx-auto">
-        {/* Avatar Section */}
+        
+        {/* Avatar */}
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8">
           <div className="flex-shrink-0">
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-[#6128FF] flex items-center justify-center">
@@ -83,9 +87,13 @@ function ProfilePage({ movements = [], total = 0 }) {
                 {userData.name}
               </h2>
             )}
+
             {!isEditing && (
-              <p className="text-[#6128FF] font-semibold mb-4">{userData.bio}</p>
+              <p className="text-[#6128FF] font-semibold mb-4">
+                {userData.bio}
+              </p>
             )}
+
             <p className="text-gray-600 text-sm">
               Miembro desde {userData.joinDate}
             </p>
@@ -94,10 +102,10 @@ function ProfilePage({ movements = [], total = 0 }) {
 
         <hr className="my-8" />
 
-        {/* Information Section */}
+        {/* Info */}
         <div className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Email */}
+
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 📧 Correo Electrónico
@@ -108,14 +116,13 @@ function ProfilePage({ movements = [], total = 0 }) {
                   name="email"
                   value={editedData.email}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF]"
                 />
               ) : (
                 <p className="text-gray-800 font-medium">{userData.email}</p>
               )}
             </div>
 
-            {/* Phone */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 📱 Teléfono
@@ -126,14 +133,13 @@ function ProfilePage({ movements = [], total = 0 }) {
                   name="phone"
                   value={editedData.phone}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF]"
                 />
               ) : (
                 <p className="text-gray-800 font-medium">{userData.phone}</p>
               )}
             </div>
 
-            {/* Location */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 📍 Ubicación
@@ -144,14 +150,13 @@ function ProfilePage({ movements = [], total = 0 }) {
                   name="location"
                   value={editedData.location}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF]"
                 />
               ) : (
                 <p className="text-gray-800 font-medium">{userData.location}</p>
               )}
             </div>
 
-            {/* Bio */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 💬 Bio
@@ -162,16 +167,17 @@ function ProfilePage({ movements = [], total = 0 }) {
                   name="bio"
                   value={editedData.bio}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF] focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#6128FF]"
                 />
               ) : (
                 <p className="text-gray-800 font-medium">{userData.bio}</p>
               )}
             </div>
+
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {/* Buttons */}
         <div className="mt-8 flex flex-col sm:flex-row gap-3">
           {!isEditing ? (
             <>
@@ -180,11 +186,12 @@ function ProfilePage({ movements = [], total = 0 }) {
                   setIsEditing(true);
                   setEditedData(userData);
                 }}
-                className="flex-1 px-6 py-3 bg-[#6128FF] text-white font-semibold rounded-lg hover:opacity-90 transition-colors duration-200"
+                className="flex-1 px-6 py-3 bg-[#6128FF] text-white font-semibold rounded-lg hover:opacity-90"
               >
                 ✏️ Editar Perfil
               </button>
-              <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-200">
+
+              <button className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300">
                 🔐 Cambiar Contraseña
               </button>
             </>
@@ -192,13 +199,14 @@ function ProfilePage({ movements = [], total = 0 }) {
             <>
               <button
                 onClick={handleSave}
-                className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors duration-200"
+                className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700"
               >
                 ✅ Guardar Cambios
               </button>
+
               <button
                 onClick={() => setIsEditing(false)}
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300 transition-colors duration-200"
+                className="flex-1 px-6 py-3 bg-gray-200 text-gray-800 font-semibold rounded-lg hover:bg-gray-300"
               >
                 ❌ Cancelar
               </button>
@@ -207,11 +215,14 @@ function ProfilePage({ movements = [], total = 0 }) {
         </div>
       </div>
 
-      {/* Additional Info Cards - Datos Reales */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mt-8">
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mt-8">
+
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">📊 Movimientos</h3>
-          <p className="text-3xl font-bold text-[#6128FF] mb-1">{stats.movimientos}</p>
+          <p className="text-3xl font-bold text-[#6128FF] mb-1">
+            {stats.movimientos}
+          </p>
           <p className="text-gray-600 text-sm">Registrados en total</p>
         </div>
 
@@ -225,15 +236,12 @@ function ProfilePage({ movements = [], total = 0 }) {
 
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-2">📈 Ingresos</h3>
-          <p className="text-3xl font-bold text-green-600 mb-1">${stats.ingresos.toFixed(2)}</p>
+          <p className="text-3xl font-bold text-green-600 mb-1">
+            ${stats.ingresos.toFixed(2)}
+          </p>
           <p className="text-gray-600 text-sm">Total ingresado</p>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">📉 Egresos</h3>
-          <p className="text-3xl font-bold text-red-600 mb-1">${stats.egresos.toFixed(2)}</p>
-          <p className="text-gray-600 text-sm">Total gastado</p>
-        </div>
       </div>
     </div>
   );

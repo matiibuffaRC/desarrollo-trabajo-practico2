@@ -4,12 +4,10 @@ function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 
     const [isOpen, setIsOpen] = useState(false);
     const [editValue, setEditValue] = useState(monthlyLimit);
 
-    // Calcular valores
     const remaining = monthlyLimit - totalExpenses;
     const percentage = Math.min((totalExpenses / monthlyLimit) * 100, 100);
     const isExceeded = totalExpenses > monthlyLimit;
 
-    // Actualizar editValue cuando cambia monthlyLimit
     useEffect(() => {
         setEditValue(monthlyLimit);
     }, [monthlyLimit]);

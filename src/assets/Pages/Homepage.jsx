@@ -11,17 +11,17 @@ function Homepage({ movements, setMovements, total }) {
   const [showForm, setShowForm] = useState(false);
   const [monthlyLimit, setMonthlyLimit] = useState(() => {
     const saved = localStorage.getItem('monthlyLimit');
-    return saved ? Number(saved) : 5000;
+    return saved ? Number(saved) : 5000; // Quitar 5000 después de testear
   });
 
   // Calcular gastos del mes actual
   const calculateMonthlyExpenses = () => {
     const now = new Date();
-    const currentMonth = now.getMonth();
+    const currentMonth = now.getMonth(); // ACORDATE QUE ARRANCA CON 0 EN ENERO BOLUDO
     const currentYear = now.getFullYear();
 
     return movements.reduce((total, mov) => {
-      if (mov.tipo !== 'Gasto') return total;
+      if (mov.tipo !== 'Gasto') return total; // Buscamos solo gastos
 
       const movDate = new Date(mov.fecha);
       if (movDate.getMonth() === currentMonth && movDate.getFullYear() === currentYear) {
