@@ -38,9 +38,9 @@ Funcionalidades con las que cuentas:
     - Un gráfico de barras que muestra el total de gastos por mes.
           - Resumen con estadísticas considerables por mes.
 
-Potenciales mejoras para la aplicación:
 
-    - Funcionalidad del modo claro/oscuro.
-    - Conexión de una base de datos.
-    - Posibilidad de crear usuarios para más personas utilicen la aplicación.
-    - Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones.
+Potenciales mejoras para la aplicación:
+    -  Funcionalidad del modo claro/oscuro.
+    -  Conexión de una base de datos.
+    -  Posibilidad de crear usuarios para más personas utilicen la aplicación.
+    -  Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones.
