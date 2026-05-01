@@ -40,7 +40,7 @@ Funcionalidades con las que cuentas:
 
 
 Potenciales mejoras para la aplicación:
-    -  Funcionalidad del modo claro/oscuro.
-    -  Conexión de una base de datos.
-    -  Posibilidad de crear usuarios para más personas utilicen la aplicación.
-    -  Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones.
+    - Funcionalidad del modo claro/oscuro.
+    - Conexión de una base de datos. 
+    - Posibilidad de crear usuarios para más personas utilicen la aplicación.
+    - Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones.
