@@ -39,6 +39,7 @@ Funcionalidades con las que cuentas:
           - Resumen con estadísticas considerables por mes.
 
 
+
 Potenciales mejoras para la aplicación:
     - Funcionalidad del modo claro/oscuro.
     - Conexión de una base de datos. 
