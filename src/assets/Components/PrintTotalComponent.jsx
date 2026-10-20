@@ -4,25 +4,34 @@ import plusIcon from "../icons/plus-svgrepo-com.svg";
 function PrintTotalComponent({ movements, onAddClick }) {
     const total = movements.reduce((acc, mov) => {
         return mov.tipo === "Ingreso"
-            ? acc + mov.monto
-            : acc - mov.monto;
+            ? acc + Number(mov.monto || 0)
+            : acc - Number(mov.monto || 0);
     }, 0);
 
     return (
-        <div className='shadow-md rounded-3xl bg-linear-to-l from-[#AFACF4] to-[#F3EDEB] flex flex-col justify-center items-center px-5 py-3'>
-            <div className='flex flex-row justify-between items-center w-full'>
-                <div>
-                    <h2 className='text-sm text-gray-700'>
-                        Dinero disponible
-                        </h2>
-                    <h3 className={`font-bold text-2xl ${total < 0? "text-red-500" : "text-black"}`}>
-                        ${total}
-                    </h3>
+        <div className='rounded-[28px] bg-gradient-to-br from-violet-500 via-violet-400 to-indigo-300 p-[1px] shadow-[0_18px_40px_rgba(91,76,255,0.2)]'>
+            <div className='flex min-h-[150px] flex-col justify-between rounded-[27px] bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.35),transparent_25%),linear-gradient(135deg,#5b4cff_0%,#8d7ef7_35%,#f8d6d7_100%)] p-5 text-white'>
+                <div className='flex items-start justify-between gap-3'>
+                    <div>
+                        <p className='text-sm font-medium text-violet-100'>Dinero disponible</p>
+                        <h3 className={`mt-3 text-3xl font-black tracking-tight ${total < 0 ? 'text-rose-100' : 'text-white'}`}>
+                            ${total.toFixed(2)}
+                        </h3>
+                    </div>
+
+                    <button
+                        onClick={onAddClick}
+                        className='flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white shadow-lg backdrop-blur-sm transition hover:bg-white/20 active:scale-95'
+                        aria-label='Agregar movimiento'
+                    >
+                        <img src={plusIcon} alt="Agregar" className='h-5 w-5' />
+                    </button>
                 </div>
 
-                <button onClick={onAddClick} className="h-7 w-7 hover:cursor-pointer bg-white rounded-full flex items-center justify-center shadow hover:bg-gray-100 active:scale-95 transition" >
-                    <img src={plusIcon} alt="Icon" className='h-4 w-4' />
-                </button>
+                <div className='mt-5 flex items-center justify-between rounded-2xl bg-white/10 px-3 py-2 text-sm text-violet-50 backdrop-blur-sm'>
+                    <span>Saldo actual</span>
+                    <span className='font-semibold'>{total >= 0 ? 'Estable' : 'Crítico'}</span>
+                </div>
             </div>
         </div>
     );

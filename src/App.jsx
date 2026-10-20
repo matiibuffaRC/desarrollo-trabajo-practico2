@@ -1,42 +1,64 @@
 import FooterComponent from "./assets/Components/FooterComponent"
-import { BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import { useState, useEffect } from "react"; // Agrega useEffect
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState, useEffect, useMemo } from "react";
 
-// Import pages 
 import Homepage from "./assets/Pages/Homepage.jsx";
 import ActivityPage from "./assets/Pages/ActivityPage.jsx";
 import StatsPage from "./assets/Pages/StatsPage.jsx";
 import ProfilePage from "./assets/Pages/ProfilePage.jsx";
-//
+
+const readStoredMovements = () => {
+  try {
+    const saved = localStorage.getItem("movements");
+    if (!saved) return [];
+    const parsed = JSON.parse(saved);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+};
+
+const readStoredLimit = () => {
+  try {
+    const saved = localStorage.getItem("monthlyLimit");
+    const numeric = Number(saved ?? 5000);
+    return Number.isFinite(numeric) && numeric > 0 ? numeric : 5000;
+  } catch {
+    return 5000;
+  }
+};
 
 function App() {
-  // Carga inicial desde localStorage (o vacío si no hay nada)
-  const [movements, setMovements] = useState(() => {
-    const saved = localStorage.getItem('movements');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [movements, setMovements] = useState(readStoredMovements);
+  const [monthlyLimit, setMonthlyLimit] = useState(readStoredLimit);
 
-  // Calculamos el saldo disponible
-  const total = movements.reduce((acc, mov) => {
-    return mov.tipo === "Ingreso" ? acc + mov.monto : acc - mov.monto;
-  }, 0);
+  const total = useMemo(
+    () =>
+      movements.reduce((acc, mov) => {
+        return mov.tipo === "Ingreso" ? acc + Number(mov.monto || 0) : acc - Number(mov.monto || 0);
+      }, 0),
+    [movements]
+  );
 
-  // Guardamos en localStorage cada vez que movements cambie
   useEffect(() => {
-    localStorage.setItem('movements', JSON.stringify(movements));
+    localStorage.setItem("movements", JSON.stringify(movements));
   }, [movements]);
+
+  useEffect(() => {
+    localStorage.setItem("monthlyLimit", String(monthlyLimit));
+  }, [monthlyLimit]);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Homepage movements={movements} setMovements={setMovements} total={total}/>}/>
-        <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} total={total} />}/>
-        <Route path="/stats" element={<StatsPage movements={movements} />}/>
-        <Route path="/profile" element={<ProfilePage movements={movements} total={total} />}/>
+        <Route path="/" element={<Homepage movements={movements} setMovements={setMovements} total={total} monthlyLimit={monthlyLimit} setMonthlyLimit={setMonthlyLimit} />} />
+        <Route path="/activity" element={<ActivityPage movements={movements} setMovements={setMovements} total={total} />} />
+        <Route path="/stats" element={<StatsPage movements={movements} />} />
+        <Route path="/profile" element={<ProfilePage movements={movements} total={total} />} />
       </Routes>
-      <FooterComponent></FooterComponent>
+      <FooterComponent />
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

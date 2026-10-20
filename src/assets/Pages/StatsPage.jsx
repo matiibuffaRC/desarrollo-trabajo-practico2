@@ -3,107 +3,97 @@ import Charts from '../Components/Charts';
 import MonthlyChart from '../Components/MonthlyChart';
 
 function StatsPage({ movements }) {
-
     function generarDatosFake() {
-        const data = JSON.parse(localStorage.getItem("movements")) || [];
+        const data = JSON.parse(localStorage.getItem('movements')) || [];
 
-        // Verificar si ya hay datos fake
-        if (data.some(mov => mov.isMock)) {
-            alert("Ya hay datos de prueba generados.");
+        if (data.some((mov) => mov.isMock)) {
+            alert('Ya hay datos de prueba generados.');
             return;
         }
 
-        const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
-
+        const categorias = ['Comida', 'Transporte', 'Entretenimiento', 'Servicios', 'Otros'];
         const movimientosFake = [];
-        let saldoActual = 0; // Rastreamos el saldo para evitar gastos imposibles
+        let saldoActual = 0;
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 6; i += 1) {
             const fechaBase = new Date();
             fechaBase.setMonth(fechaBase.getMonth() - i);
 
-            for (let j = 0; j < 8; j++) {
-                // Mayor probabilidad de ingresos (60%) que gastos (40%)
+            for (let j = 0; j < 8; j += 1) {
                 const esGasto = Math.random() > 0.6;
-                
-                let monto = Math.floor(Math.random() * 5000) + 500;
+                const monto = Math.floor(Math.random() * 5000) + 500;
 
-                // Si es gasto, asegurar que no supere el saldo disponible
                 if (esGasto && monto > saldoActual) {
-                    // Si el gasto sería imposible, convertirlo a ingreso
                     movimientosFake.push({
                         id: crypto.randomUUID(),
-                        monto: monto,
-                        tipo: "Ingreso",
-                        descripcion: "Ingreso random",
+                        monto,
+                        tipo: 'Ingreso',
+                        descripcion: 'Ingreso random',
                         categoria: null,
                         fecha: new Date(
                             fechaBase.getFullYear(),
                             fechaBase.getMonth(),
-                            Math.floor(Math.random() * 28) + 1
+                            Math.floor(Math.random() * 28) + 1,
                         ).toISOString(),
-                        isMock: true
+                        isMock: true,
                     });
                     saldoActual += monto;
                 } else {
-                    // Gasto válido o ingreso
                     movimientosFake.push({
                         id: crypto.randomUUID(),
-                        monto: monto,
-                        tipo: esGasto ? "Gasto" : "Ingreso",
-                        descripcion: esGasto ? "Gasto random" : "Ingreso random",
-                        categoria: esGasto 
-                            ? categorias[Math.floor(Math.random() * categorias.length)]
-                            : null,
+                        monto,
+                        tipo: esGasto ? 'Gasto' : 'Ingreso',
+                        descripcion: esGasto ? 'Gasto random' : 'Ingreso random',
+                        categoria: esGasto ? categorias[Math.floor(Math.random() * categorias.length)] : null,
                         fecha: new Date(
                             fechaBase.getFullYear(),
                             fechaBase.getMonth(),
-                            Math.floor(Math.random() * 28) + 1
+                            Math.floor(Math.random() * 28) + 1,
                         ).toISOString(),
-                        isMock: true
+                        isMock: true,
                     });
                     saldoActual += esGasto ? -monto : monto;
                 }
             }
         }
 
-        // Combinar con datos reales
-        const reales = data.filter(mov => !mov.isMock);
-        localStorage.setItem("movements", JSON.stringify([...reales, ...movimientosFake]));
-        location.reload();
+        const reales = data.filter((mov) => !mov.isMock);
+        localStorage.setItem('movements', JSON.stringify([...reales, ...movimientosFake]));
+        window.location.reload();
     }
 
     function eliminarDatosFake() {
-        const data = JSON.parse(localStorage.getItem("movements")) || [];
-
-        const nuevosMovimientos = data.filter(mov => !mov.isMock);
-
-        localStorage.setItem("movements", JSON.stringify(nuevosMovimientos));
-        location.reload();
+        const data = JSON.parse(localStorage.getItem('movements')) || [];
+        const nuevosMovimientos = data.filter((mov) => !mov.isMock);
+        localStorage.setItem('movements', JSON.stringify(nuevosMovimientos));
+        window.location.reload();
     }
+
     return (
-        <div className="min-h-screen w-full bg-linear-to-b from-white to-[#F4F4F6] px-4 py-6 pb-24 flex flex-col items-center md:px-20">
-            <div className="md:pl-45 w-full md:max-w-5xl flex flex-col items-center gap-2 py-5">
-                {/* HEADER */}
-                <div className="w-full max-w-xl mb-6">
-                    <h1 className="sora text-2xl font-bold text-gray-800">Estadísticas</h1>
-                    <p className="inter text-sm text-gray-500">
-                        Estos fueron tus gastos los ultimos meses.
-                    </p>
+        <div className='min-h-screen w-full bg-gradient-to-b from-white to-[#F4F4F6] px-4 py-6 pb-24 md:px-20 md:pl-56'>
+            <div className='mx-auto flex w-full max-w-5xl flex-col items-center gap-2 py-5'>
+                <div className='mb-6 w-full max-w-xl'>
+                    <p className='text-xs font-semibold uppercase tracking-[0.2em] text-violet-500'>Insights</p>
+                    <h1 className='sora mt-2 text-3xl font-black text-slate-900'>Estadísticas</h1>
+                    <p className='mt-2 text-sm text-slate-500'>Estos fueron tus gastos y movimientos en los últimos meses.</p>
                 </div>
 
-                {/* BOTÓN */}
-                <div className="w-full max-w-xl mb-6 flex flex-col items-center gap-3">
-                    <button onClick={generarDatosFake} className="inter hover:cursor-pointer w-full md:max-w-sm flex items-center justify-center gap-2 bg-black text-white py-3 rounded-xl shadow-sm hover:opacity-90 active:scale-[0.98] transition">
+                <div className='mb-6 flex w-full max-w-xl flex-col items-center gap-3'>
+                    <button
+                        onClick={generarDatosFake}
+                        className='inter w-full rounded-2xl bg-gradient-to-r from-slate-900 to-slate-700 px-4 py-3 font-semibold text-white shadow-sm transition hover:opacity-95 active:scale-[0.98] md:max-w-sm'
+                    >
                         📊 Generar datos de prueba
                     </button>
-                    <button onClick={eliminarDatosFake} className="inter hover:cursor-pointer w-full md:max-w-sm flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl shadow-sm hover:bg-red-600 active:scale-[0.98] transition">
+                    <button
+                        onClick={eliminarDatosFake}
+                        className='inter w-full rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:opacity-95 active:scale-[0.98] md:max-w-sm'
+                    >
                         🧹 Limpiar datos de prueba
                     </button>
                 </div>
 
-                {/* CONTENIDO */}
-                <div className="w-full max-w-xl flex flex-col lg:flex-row md:max-w-5xl gap-2">
+                <div className='flex w-full max-w-5xl flex-col gap-4 lg:flex-row'>
                     <Charts movements={movements} />
                     <MonthlyChart movements={movements} />
                 </div>
