@@ -1,27 +1,26 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --color-brand-50: #f1efff;
+  --color-brand-100: #e4e0ff;
+  --color-brand-200: #cbc4ff;
+  --color-brand-500: #5b4cff;
+  --color-brand-600: #4b3cf0;
+  --color-brand-700: #3d2fd1;
+  --color-ink: #12121a;
+  --color-income: #12996a;
+  --color-expense: #d9541e;
+}
+
 :root {
   color-scheme: light;
-  --bg-page: #f4f4f8;
-  --bg-panel: rgba(255, 255, 255, 0.82);
-  --bg-card: #ffffff;
-  --bg-soft: #f3f4f9;
-  --text-primary: #18181b;
-  --text-secondary: #5b6475;
-  --text-muted: #7b8195;
-  --line: rgba(148, 163, 184, 0.24);
-  --primary: #5b4cff;
-  --primary-soft: #e8e4ff;
-  --success: #18a957;
-  --success-soft: #e8f9ef;
-  --danger: #ea4a4a;
-  --danger-soft: #ffe9e9;
-  --warning: #f59e0b;
-  --shadow-soft: 0 18px 48px rgba(91, 76, 255, 0.12);
+  --bg-page: #f5f5fa;
 }
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -32,68 +31,82 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(91, 76, 255, 0.14), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.08), transparent 26%),
+    radial-gradient(1200px 500px at -10% -10%, rgba(91, 76, 255, 0.10), transparent 60%),
+    radial-gradient(900px 400px at 110% 110%, rgba(27, 175, 122, 0.07), transparent 60%),
     var(--bg-page);
-  color: var(--text-primary);
-  font-family: "Inter", sans-serif;
+  background-attachment: fixed;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
 }
 
-button,
-input,
-select {
-  font: inherit;
-}
-
-@keyframes dropdownFade {
-  from {
-    opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+@layer base {
+  button,
+  input,
+  select {
+    font: inherit;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  button {
+    cursor: pointer;
   }
 }
 
-.animate-dropdown {
-  animation: dropdownFade 0.18s ease-out;
+/* Montos: cifras tabulares para que se alineen */
+.num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
 }
 
-.sora {
-  font-family: "Sora", sans-serif;
-  font-optical-sizing: auto;
-}
+@layer components {
+  .card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 24px;
+    box-shadow: 0 1px 2px rgba(18, 18, 26, 0.04), 0 12px 32px rgba(18, 18, 26, 0.05);
+    border: 1px solid rgba(18, 18, 26, 0.05);
+  }
 
-.inter {
-  font-family: "Inter", sans-serif;
-  font-optical-sizing: auto;
-}
+  .input {
+    width: 100%;
+    border: 1px solid rgba(18, 18, 26, 0.1);
+    background: #fff;
+    border-radius: 14px;
+    padding: 0.65rem 0.9rem;
+    color: var(--color-ink);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
 
-.app-shell {
-  backdrop-filter: blur(8px);
-}
+  .input:focus {
+    outline: none;
+    border-color: var(--color-brand-500);
+    box-shadow: 0 0 0 4px rgba(91, 76, 255, 0.14);
+  }
 
-.glass-card {
-  background: var(--bg-panel);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow: var(--shadow-soft);
-}
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+    border-radius: 999px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border: 1px solid rgba(18, 18, 26, 0.08);
+    background: #fff;
+    color: #4b4b5a;
+    transition: all 0.15s ease;
+  }
 
-.soft-divider {
-  border-color: var(--line);
-}
+  .chip:hover {
+    border-color: rgba(91, 76, 255, 0.4);
+  }
 
-.input-shell {
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(255, 255, 255, 0.8);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
+  .chip[data-active="true"] {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: #fff;
+  }
 
-.input-shell:focus {
-  outline: none;
-  border-color: rgba(91, 76, 255, 0.7);
-  box-shadow: 0 0 0 4px rgba(91, 76, 255, 0.12);
 }
 
 .hidden-scrollbar {
@@ -102,4 +115,41 @@ select {
 
 .hidden-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.35s ease-out both;
+}
+
+.animate-pop {
+  animation: pop 0.16s ease-out both;
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Recharts: sin borde de foco en el SVG */
+.recharts-wrapper *:focus {
+  outline: none;
+}
+
+/* Evita que gráficos o carruseles fuercen desborde horizontal dentro de grids */
+main .grid > * {
+  min-width: 0;
+}
+
+html,
+body {
+  overflow-x: clip;
 }

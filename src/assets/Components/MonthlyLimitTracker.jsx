@@ -1,152 +1,151 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from "react";
+import { useApp } from "../../lib/AppContext";
+import { formatMoney, formatCompact } from "../../lib/finance";
+import { EditIcon, AlertIcon, CheckIcon } from "./Icons";
 
-function MonthlyLimitTracker({ monthlyLimit, setMonthlyLimit, totalExpenses = 0 }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const [editValue, setEditValue] = useState(monthlyLimit);
+function MonthlyLimitTracker({ spent }) {
+  const { monthlyLimit, setMonthlyLimit, showToast } = useApp();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(String(monthlyLimit));
+  const [error, setError] = useState("");
 
-    const remaining = monthlyLimit - totalExpenses;
-    const percentage = Math.min((totalExpenses / monthlyLimit) * 100, 100);
-    const isExceeded = totalExpenses > monthlyLimit;
+  const now = new Date();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+  const day = now.getDate();
+  const pct = monthlyLimit ? (spent / monthlyLimit) * 100 : 0;
+  const remaining = monthlyLimit - spent;
+  const projection = (spent / day) * daysInMonth;
+  const dailyAllowance = remaining > 0 ? remaining / (daysInMonth - day + 1) : 0;
+  const monthPct = (day / daysInMonth) * 100;
 
-    useEffect(() => {
-        setEditValue(monthlyLimit);
-    }, [monthlyLimit]);
+  const status =
+    pct >= 100
+      ? { label: "Límite superado", tone: "critical", bar: "#d03b3b", Icon: AlertIcon }
+      : pct >= 80 || projection > monthlyLimit
+        ? { label: projection > monthlyLimit && pct < 80 ? "Al ritmo actual lo superás" : "Cerca del límite", tone: "warning", bar: "#ec835a", Icon: AlertIcon }
+        : { label: "Vas bien", tone: "good", bar: "#0ca30c", Icon: CheckIcon };
 
-    const handleSaveLimit = () => {
-        const parsedValue = Number(editValue);
-        if (parsedValue > 0) {
-            setMonthlyLimit(parsedValue);
-            setIsOpen(false);
-            return;
-        }
+  const toneClass = {
+    critical: "bg-rose-50 text-rose-700",
+    warning: "bg-amber-50 text-amber-800",
+    good: "bg-emerald-50 text-emerald-700",
+  }[status.tone];
 
-        alert('El límite debe ser mayor a 0');
-    };
+  const save = () => {
+    const n = Number(value);
+    if (!Number.isFinite(n) || n <= 0) {
+      setError("Ingresá un monto mayor a 0");
+      return;
+    }
+    setMonthlyLimit(n);
+    setEditing(false);
+    setError("");
+    showToast("Límite mensual actualizado");
+  };
 
-    const handleCancelEdit = () => {
-        setEditValue(monthlyLimit);
-        setIsOpen(false);
-    };
-
-    return (
-        <div className='w-full'>
-            <div
-                onClick={() => setIsOpen(!isOpen)}
-                className={`rounded-[26px] bg-white/85 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.08)] ring-1 ring-white/70 transition-all duration-300 ${isOpen ? 'rounded-b-none shadow-lg' : ''}`}
-            >
-                <div className={`transition-all duration-300 ${isOpen ? 'max-h-0 opacity-0 overflow-hidden' : 'max-h-[320px] opacity-100'}`}>
-                    <div className='mb-5 flex items-center justify-between'>
-                        <div>
-                            <p className='text-xs font-semibold uppercase tracking-[0.18em] text-violet-500'>Presupuesto</p>
-                            <h2 className='sora mt-2 text-lg font-black text-slate-900'>Límite mensual</h2>
-                        </div>
-                        <span className='text-2xl'>💳</span>
-                    </div>
-
-                    <div className='space-y-3 pb-1'>
-                        <div className='rounded-2xl bg-gradient-to-r from-violet-50 to-indigo-50 p-4'>
-                            <p className='text-sm font-medium text-slate-600'>Límite establecido</p>
-                            <p className='sora mt-2 text-xl font-black text-violet-800'>${monthlyLimit.toFixed(2)}</p>
-                        </div>
-
-                        <div className='grid grid-cols-2 gap-3'>
-                            <div className={`rounded-2xl p-4 ${isExceeded ? 'bg-rose-50' : 'bg-emerald-50'}`}>
-                                <p className='text-sm text-slate-600'>Gastado</p>
-                                <p className={`sora mt-2 text-lg font-black ${isExceeded ? 'text-rose-600' : 'text-emerald-600'}`}>
-                                    ${totalExpenses.toFixed(2)}
-                                </p>
-                            </div>
-
-                            <div className={`rounded-2xl p-4 ${isExceeded ? 'bg-rose-50' : 'bg-emerald-50'}`}>
-                                <p className='text-sm text-slate-600'>{isExceeded ? 'Excedido' : 'Disponible'}</p>
-                                <p className={`sora mt-2 text-lg font-black ${isExceeded ? 'text-rose-600' : 'text-emerald-600'}`}>
-                                    ${Math.abs(remaining).toFixed(2)}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className='mt-5'>
-                        <div className='mb-2 flex items-center justify-between'>
-                            <p className='text-xs font-medium uppercase tracking-[0.15em] text-slate-500'>Progreso</p>
-                            <p className='text-sm font-semibold text-slate-700'>{percentage.toFixed(1)}%</p>
-                        </div>
-                        <div className='h-3 w-full overflow-hidden rounded-full bg-slate-200'>
-                            <div
-                                className={`h-full rounded-full transition-all duration-500 ${isExceeded ? 'bg-rose-500' : 'bg-emerald-500'}`}
-                                style={{ width: `${Math.min(percentage, 100)}%` }}
-                            />
-                        </div>
-                    </div>
-
-                    {isExceeded && (
-                        <div className='mt-4 rounded-2xl border-l-4 border-rose-500 bg-rose-50 p-3'>
-                            <p className='text-sm font-semibold text-rose-700'>⚠️ Has superado tu límite</p>
-                            <p className='mt-1 text-xs text-rose-600'>Excedido por ${Math.abs(remaining).toFixed(2)}</p>
-                        </div>
-                    )}
-                </div>
-
-                <div onClick={(e) => e.stopPropagation()} className={`overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-[360px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                    <div className='border-t border-slate-200 pt-5'>
-                        <div className='mb-5'>
-                            <h3 className='sora text-lg font-black text-slate-900'>Editar límite</h3>
-                            <p className='mt-1 text-sm text-slate-600'>Límite actual: <span className='font-bold'>${monthlyLimit.toFixed(2)}</span></p>
-                        </div>
-
-                        <div className='mb-5 grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-3'>
-                            <div>
-                                <p className='text-[11px] uppercase tracking-[0.14em] text-slate-500'>Límite</p>
-                                <p className='sora mt-1 font-bold text-slate-800'>${monthlyLimit.toFixed(2)}</p>
-                            </div>
-                            <div>
-                                <p className='text-[11px] uppercase tracking-[0.14em] text-slate-500'>Gastado</p>
-                                <p className={`sora mt-1 font-bold ${isExceeded ? 'text-rose-600' : 'text-emerald-600'}`}>
-                                    ${totalExpenses.toFixed(2)}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className='mb-5'>
-                            <label className='mb-2 block text-sm font-semibold text-slate-700'>Nuevo límite</label>
-                            <div className='relative'>
-                                <span className='absolute left-3 top-3 text-lg text-slate-500'>$</span>
-                                <input
-                                    type='number'
-                                    value={editValue}
-                                    onChange={(e) => setEditValue(e.target.value)}
-                                    className='input-shell w-full rounded-2xl p-3 pl-8 text-slate-800'
-                                    min='0'
-                                    step='100'
-                                    autoFocus
-                                />
-                            </div>
-                            <p className='mt-2 text-xs text-slate-500'>
-                                {Number(editValue) > 0
-                                    ? `Te quedarían $${(Number(editValue) - totalExpenses).toFixed(2)} disponibles`
-                                    : 'Ingresa un valor válido'}
-                            </p>
-                        </div>
-
-                        <div className='flex gap-3 px-6'>
-                            <button
-                                onClick={handleSaveLimit}
-                                className='flex-1 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-3 py-2.5 text-sm font-bold text-white shadow-md transition hover:shadow-lg active:scale-95'
-                            >
-                                Guardar
-                            </button>
-                            <button
-                                onClick={handleCancelEdit}
-                                className='flex-1 rounded-xl bg-slate-200 px-3 py-2.5 text-sm font-bold text-slate-700 transition hover:bg-slate-300 active:scale-95'
-                            >
-                                Cancelar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  return (
+    <section className="card p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Presupuesto del mes</p>
+          <p className="num mt-1 text-2xl font-extrabold">
+            {formatMoney(spent)}
+            <span className="text-sm font-semibold text-slate-400"> / {formatMoney(monthlyLimit)}</span>
+          </p>
         </div>
-    );
+        {!editing && (
+          <button
+            onClick={() => {
+              setValue(String(monthlyLimit));
+              setEditing(true);
+            }}
+            className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600 transition hover:bg-slate-200"
+          >
+            <EditIcon className="h-3.5 w-3.5" /> Editar
+          </button>
+        )}
+      </div>
+
+      {editing ? (
+        <div className="animate-fade-up mt-4">
+          <label className="text-xs font-bold text-slate-500" htmlFor="limit-input">
+            Nuevo límite mensual
+          </label>
+          <div className="mt-1 flex gap-2">
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-slate-400">$</span>
+              <input
+                id="limit-input"
+                type="number"
+                inputMode="decimal"
+                min="0"
+                step="1000"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && save()}
+                className="input num pl-7"
+                autoFocus
+              />
+            </div>
+            <button onClick={save} className="rounded-xl bg-ink px-4 text-sm font-bold text-white">
+              Guardar
+            </button>
+            <button onClick={() => setEditing(false)} className="rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-600">
+              ✕
+            </button>
+          </div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {[300000, 500000, 800000, 1000000].map((n) => (
+              <button key={n} onClick={() => setValue(String(n))} className="chip num !py-1 !text-xs">
+                {formatMoney(n).replace(",00", "")}
+              </button>
+            ))}
+          </div>
+          {error && <p className="mt-1.5 text-xs font-semibold text-rose-500">{error}</p>}
+        </div>
+      ) : (
+        <>
+          {/* Barra de progreso con marcador del día del mes */}
+          <div className="relative mt-4">
+            <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
+              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: status.bar }} />
+            </div>
+            <div
+              className="absolute -top-1 h-[18px] w-0.5 rounded bg-ink/40"
+              style={{ left: `${monthPct}%` }}
+              title={`Día ${day} de ${daysInMonth}`}
+            />
+          </div>
+          <div className="mt-2 flex justify-between text-[11px] font-semibold text-slate-400">
+            <span className="num">{pct.toFixed(0)}% usado</span>
+            <span>
+              Día {day} de {daysInMonth}
+            </span>
+          </div>
+
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            <Metric label={remaining >= 0 ? "Disponible" : "Excedido"} value={formatMoney(Math.abs(remaining))} danger={remaining < 0} />
+            <Metric label="Por día" value={formatMoney(dailyAllowance)} />
+            <Metric label="Proyección" value={formatCompact(projection)} danger={projection > monthlyLimit} />
+          </div>
+
+          <div className={`mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-bold ${toneClass}`}>
+            <status.Icon className="h-4 w-4" />
+            {status.label}
+          </div>
+        </>
+      )}
+    </section>
+  );
+}
+
+function Metric({ label, value, danger }) {
+  return (
+    <div className="rounded-2xl bg-slate-50 px-3 py-2.5">
+      <p className="text-[11px] font-semibold text-slate-400">{label}</p>
+      <p className={`num mt-0.5 truncate text-sm font-extrabold ${danger ? "text-rose-600" : ""}`}>{value}</p>
+    </div>
+  );
 }
 
 export default MonthlyLimitTracker;

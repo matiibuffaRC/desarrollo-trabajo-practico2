@@ -1,174 +1,221 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from "react";
+import { useApp } from "../../lib/AppContext";
+import {
+  EXPENSE_CATEGORIES,
+  INCOME_CATEGORIES,
+  formatMoney,
+  fromInputDate,
+  toInputDate,
+  signedAmount,
+} from "../../lib/finance";
+import { XIcon } from "./Icons";
 
-function MovementForm({ setMovements, onClose, movementToEdit, total }) {
-    const [monto, setMonto] = useState("");
-    const [tipo, setTipo] = useState("ingreso");
-    const [descripcion, setDescripcion] = useState("");
-    const [categoria, setCategoria] = useState("");
-    const [show, setShow] = useState(false);
+function MovementForm() {
+  const { form, closeForm, saveMovement, total, showToast } = useApp();
+  const editing = form.movement && !form.movement.__duplicate ? form.movement : null;
+  const source = form.movement;
 
-    const categorias = ["Comida", "Transporte", "Entretenimiento", "Servicios", "Otros"];
+  const [tipo, setTipo] = useState(source?.tipo || form.tipo || "Gasto");
+  const [monto, setMonto] = useState(source ? String(source.monto) : "");
+  const [categoria, setCategoria] = useState(source?.categoria || "");
+  const [descripcion, setDescripcion] = useState(source?.descripcion || "");
+  const [fecha, setFecha] = useState(toInputDate(editing ? editing.fecha : new Date()));
+  const [errors, setErrors] = useState({});
+  const [show, setShow] = useState(false);
+  const amountRef = useRef(null);
 
-    useEffect(() => {
-        const timer = setTimeout(() => setShow(true), 10);
-        return () => clearTimeout(timer);
-    }, []);
+  const categories = tipo === "Gasto" ? EXPENSE_CATEGORIES : INCOME_CATEGORIES;
 
-    useEffect(() => {
-        if (movementToEdit) {
-            setMonto(String(movementToEdit.monto ?? ""));
-            setTipo((movementToEdit.tipo || "Ingreso").toLowerCase());
-            setDescripcion(movementToEdit.descripcion || "");
-            setCategoria(movementToEdit.categoria || "");
-        } else {
-            setMonto("");
-            setTipo("ingreso");
-            setDescripcion("");
-            setCategoria("");
-        }
-    }, [movementToEdit]);
-
-    const handleClose = () => {
-        setShow(false);
-        setTimeout(onClose, 260);
+  useEffect(() => {
+    const t = requestAnimationFrame(() => setShow(true));
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e) => e.key === "Escape" && handleClose();
+    window.addEventListener("keydown", onKey);
+    setTimeout(() => amountRef.current?.focus(), 250);
+    return () => {
+      cancelAnimationFrame(t);
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKey);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    const addMovement = () => {
-        const tipoCapitalizado = tipo.charAt(0).toUpperCase() + tipo.slice(1);
-        const descripcionFinal = descripcion.trim() !== ""
-            ? descripcion.trim()
-            : tipoCapitalizado === "Ingreso"
-            ? "Ingreso"
-            : "Gasto";
+  function handleClose() {
+    setShow(false);
+    setTimeout(closeForm, 220);
+  }
 
-        const montoNumber = Number(monto);
+  const changeTipo = (t) => {
+    setTipo(t);
+    setCategoria("");
+    setErrors({});
+  };
 
-        if (movementToEdit) {
-            const movimientoActualizado = {
-                ...movementToEdit,
-                monto: montoNumber,
-                tipo: tipoCapitalizado,
-                descripcion: descripcionFinal,
-                categoria: tipo === "gasto" ? categoria : null,
-            };
+  // Saldo disponible sin contar el movimiento que se está editando
+  const available = editing ? total - signedAmount(editing) : total;
 
-            setMovements(prev => prev.map(mov => mov.id === movementToEdit.id ? movimientoActualizado : mov));
-        } else {
-            const nuevoMovimiento = {
-                id: crypto.randomUUID(),
-                monto: montoNumber,
-                tipo: tipoCapitalizado,
-                descripcion: descripcionFinal,
-                categoria: tipo === "gasto" ? categoria : null,
-                fecha: new Date().toISOString(),
-            };
-            setMovements(prev => [...prev, nuevoMovimiento]);
-        }
+  function handleSubmit(e) {
+    e.preventDefault();
+    const amount = Number(monto);
+    const next = {};
+    if (!monto || !Number.isFinite(amount) || amount <= 0) next.monto = "Ingresá un monto mayor a 0";
+    if (!categoria) next.categoria = "Elegí una categoría";
+    if (!fecha) next.fecha = "Elegí una fecha";
+    else if (fromInputDate(fecha) > new Date(Date.now() + 60000)) next.fecha = "La fecha no puede ser futura";
+    if (!next.monto && tipo === "Gasto" && amount > available)
+      next.monto = `Saldo insuficiente. Disponible: ${formatMoney(available)}`;
 
-        setMonto("");
-        setTipo("ingreso");
-        setDescripcion("");
-        setCategoria("");
+    setErrors(next);
+    if (Object.keys(next).length) return;
 
-        handleClose();
-        return true;
+    const keepTime = editing && toInputDate(editing.fecha) === fecha;
+    const mov = {
+      ...(editing || {}),
+      id: editing?.id || crypto.randomUUID(),
+      tipo,
+      monto: Math.round(amount * 100) / 100,
+      categoria,
+      descripcion: descripcion.trim() || categoria,
+      fecha: keepTime ? editing.fecha : fromInputDate(fecha).toISOString(),
     };
+    delete mov.isMock;
+    saveMovement(mov);
+    showToast(editing ? "Cambios guardados" : `${tipo} de ${formatMoney(mov.monto)} agregado`);
+    handleClose();
+  }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+  const isExpense = tipo === "Gasto";
 
-        const montoNumber = Number(monto);
-
-        if (!monto || montoNumber <= 0) {
-            alert("Ingresá un monto válido");
-            return;
-        }
-
-        if (tipo === "gasto" && !categoria) {
-            alert("Seleccioná una categoría");
-            return;
-        }
-
-        let saldoDisponible = total;
-        if (movementToEdit) {
-            saldoDisponible -= movementToEdit.tipo === "Gasto" ? movementToEdit.monto : -movementToEdit.monto;
-        }
-
-        if (tipo === "gasto" && montoNumber > saldoDisponible) {
-            alert(`No tienes suficiente saldo. Disponible: $${saldoDisponible.toFixed(2)} | Estás queriendo gastar: $${montoNumber.toFixed(2)}`);
-            return;
-        }
-
-        addMovement();
-    };
-
-    return (
-        <div className={`fixed inset-0 z-50 flex items-end justify-center bg-black/40 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0"}`}>
-            <form
-                onSubmit={handleSubmit}
-                className={`w-full rounded-t-[28px] bg-white p-5 shadow-[0_-18px_40px_rgba(15,23,42,0.12)] transition-all duration-300 md:ml-52 md:max-w-xl ${show ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"}`}
-            >
-                <div className='mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-200' />
-                <div className='mb-4 flex items-center justify-between'>
-                    <h2 className='sora text-xl font-black text-slate-900'>
-                        {movementToEdit ? 'Editar movimiento' : 'Nuevo movimiento'}
-                    </h2>
-                    <button type='button' onClick={handleClose} className='rounded-full p-2 text-sm text-slate-500 hover:bg-slate-100'>✕</button>
-                </div>
-
-                <div className='space-y-3'>
-                    <input
-                        type='number'
-                        value={monto}
-                        onChange={(e) => setMonto(e.target.value)}
-                        placeholder='Monto'
-                        className='input-shell w-full rounded-2xl px-4 py-3 text-base text-slate-800'
-                        min='0'
-                        step='0.01'
-                    />
-
-                    <input
-                        type='text'
-                        value={descripcion}
-                        onChange={(e) => setDescripcion(e.target.value)}
-                        placeholder='Descripción (opcional)'
-                        className='input-shell w-full rounded-2xl px-4 py-3 text-base text-slate-800'
-                    />
-
-                    <select
-                        value={tipo}
-                        onChange={(e) => { setTipo(e.target.value); setCategoria(''); }}
-                        className='input-shell w-full rounded-2xl px-4 py-3 text-base text-slate-800'
-                    >
-                        <option value='ingreso'>Ingreso</option>
-                        <option value='gasto'>Gasto</option>
-                    </select>
-
-                    {tipo === 'gasto' && (
-                        <select
-                            value={categoria}
-                            onChange={(e) => setCategoria(e.target.value)}
-                            className='input-shell w-full rounded-2xl px-4 py-3 text-base text-slate-800'
-                        >
-                            <option value=''>Seleccionar categoría</option>
-                            {categorias.map((cat, index) => (
-                                <option key={index} value={cat}>{cat}</option>
-                            ))}
-                        </select>
-                    )}
-                </div>
-
-                <div className='mt-5 flex flex-col gap-3'>
-                    <button type='submit' className='rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-3 font-semibold text-white shadow-md transition hover:opacity-95 active:scale-[0.99]'>
-                        {movementToEdit ? 'Guardar cambios' : 'Agregar movimiento'}
-                    </button>
-                    <button type='button' onClick={handleClose} className='rounded-2xl bg-slate-100 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-200'>
-                        Cancelar
-                    </button>
-                </div>
-            </form>
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-end justify-center bg-ink/40 backdrop-blur-[2px] transition-opacity duration-200 md:items-center md:pl-60 ${show ? "opacity-100" : "opacity-0"}`}
+      onMouseDown={(e) => e.target === e.currentTarget && handleClose()}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="movement-form-title"
+    >
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        className={`safe-bottom max-h-[92vh] w-full overflow-y-auto rounded-t-[32px] bg-white p-5 shadow-2xl transition-transform duration-200 md:max-w-lg md:rounded-[32px] md:p-7 ${show ? "translate-y-0" : "translate-y-full md:translate-y-6"}`}
+      >
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-slate-200 md:hidden" />
+        <div className="mb-5 flex items-center justify-between">
+          <h2 id="movement-form-title" className="text-xl font-extrabold">
+            {editing ? "Editar movimiento" : "Nuevo movimiento"}
+          </h2>
+          <button type="button" onClick={handleClose} className="rounded-full p-2 text-slate-500 hover:bg-slate-100" aria-label="Cerrar">
+            <XIcon />
+          </button>
         </div>
-    );
+
+        {/* Tipo */}
+        <div className="mb-5 grid grid-cols-2 gap-1 rounded-2xl bg-slate-100 p-1">
+          {["Gasto", "Ingreso"].map((t) => (
+            <button
+              key={t}
+              type="button"
+              onClick={() => changeTipo(t)}
+              className={`rounded-xl py-2.5 text-sm font-bold transition ${
+                tipo === t ? `bg-white shadow-sm ${t === "Gasto" ? "text-expense" : "text-income"}` : "text-slate-500"
+              }`}
+            >
+              {t === "Gasto" ? "− Gasto" : "+ Ingreso"}
+            </button>
+          ))}
+        </div>
+
+        {/* Monto */}
+        <label className="block">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Monto</span>
+          <div className={`mt-1 flex items-center gap-1 border-b-2 pb-1 transition ${errors.monto ? "border-rose-400" : "border-slate-200 focus-within:border-brand-500"}`}>
+            <span className={`text-3xl font-extrabold ${isExpense ? "text-expense" : "text-income"}`}>$</span>
+            <input
+              ref={amountRef}
+              type="number"
+              inputMode="decimal"
+              min="0"
+              step="0.01"
+              value={monto}
+              onChange={(e) => setMonto(e.target.value)}
+              placeholder="0,00"
+              className="num w-full bg-transparent text-4xl font-extrabold outline-none placeholder:text-slate-300"
+            />
+          </div>
+        </label>
+        <p className={`mt-1.5 min-h-4 text-xs ${errors.monto ? "font-semibold text-rose-500" : "text-slate-400"}`}>
+          {errors.monto || (isExpense ? `Disponible: ${formatMoney(available)}` : "")}
+        </p>
+
+        {/* Categoría */}
+        <div className="mt-4">
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Categoría</span>
+          <div className="mt-2 grid grid-cols-4 gap-2">
+            {categories.map((c) => {
+              const active = categoria === c.name;
+              return (
+                <button
+                  key={c.name}
+                  type="button"
+                  onClick={() => {
+                    setCategoria(c.name);
+                    setErrors((er) => ({ ...er, categoria: undefined }));
+                  }}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border px-1 py-2.5 text-[11px] font-semibold transition ${
+                    active ? "border-brand-500 bg-brand-50 text-brand-700" : "border-slate-100 bg-slate-50 text-slate-600 hover:border-slate-200"
+                  }`}
+                  aria-pressed={active}
+                >
+                  <span className="text-xl leading-none">{c.icon}</span>
+                  <span className="w-full break-words text-center text-[10.5px] leading-tight sm:text-[11px]">{{ Entretenimiento: "Ocio", Transporte: "Transp.", "Otros ingresos": "Otros" }[c.name] || c.name}</span>
+                </button>
+              );
+            })}
+          </div>
+          {errors.categoria && <p className="mt-1.5 text-xs font-semibold text-rose-500">{errors.categoria}</p>}
+        </div>
+
+        {/* Descripción + fecha */}
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-[1fr_160px]">
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Descripción</span>
+            <input
+              type="text"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder={categoria ? `Ej: ${categoria}` : "Opcional"}
+              maxLength={60}
+              className="input mt-1"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Fecha</span>
+            <input
+              type="date"
+              value={fecha}
+              max={toInputDate(new Date())}
+              onChange={(e) => setFecha(e.target.value)}
+              className="input mt-1"
+            />
+            {errors.fecha && <p className="mt-1 text-xs font-semibold text-rose-500">{errors.fecha}</p>}
+          </label>
+        </div>
+
+        <div className="mt-6 flex gap-3">
+          <button type="button" onClick={handleClose} className="flex-1 rounded-2xl bg-slate-100 py-3.5 text-sm font-bold text-slate-600 transition hover:bg-slate-200">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="flex-[2] rounded-2xl bg-ink py-3.5 text-sm font-bold text-white transition hover:bg-black active:scale-[0.99]"
+          >
+            {editing ? "Guardar cambios" : `Agregar ${tipo.toLowerCase()}`}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
 export default MovementForm;
