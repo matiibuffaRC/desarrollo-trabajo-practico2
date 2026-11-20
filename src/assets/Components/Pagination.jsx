@@ -23,7 +23,7 @@ function Pagination({ page, totalPages, totalItems, pageSize, onPageChange, onPa
   return (
     <div className="flex flex-col items-center justify-between gap-3 pt-4 sm:flex-row">
       <div className="flex items-center gap-2 text-xs text-slate-500">
-        <span className="num">
+        <span className="num no-privacy">
           {from}–{to} de {totalItems}
         </span>
         <span className="text-slate-300">·</span>

@@ -264,3 +264,91 @@ export function generateMockMovements(months = 6) {
   // No generar movimientos en el futuro
   return result.filter((m) => new Date(m.fecha) <= now);
 }
+
+// ---------- Movimientos recurrentes ----------
+export const FREQUENCIES = [
+  { id: "semanal", label: "Semanal", short: "por semana" },
+  { id: "mensual", label: "Mensual", short: "por mes" },
+  { id: "anual", label: "Anual", short: "por año" },
+];
+
+export const frequencyLabel = (id) => FREQUENCIES.find((f) => f.id === id)?.label ?? id;
+
+// Fecha de la n-ésima repetición (0 = la fecha de inicio). Respeta fin de mes (31 → 30/28).
+export function nthOccurrence(rule, n) {
+  const s = new Date(rule.startDate);
+  if (rule.frecuencia === "semanal") {
+    const d = new Date(s);
+    d.setDate(s.getDate() + 7 * n);
+    return d;
+  }
+  const months = rule.frecuencia === "anual" ? 12 * n : n;
+  const y = s.getFullYear();
+  const m = s.getMonth() + months;
+  const last = new Date(y, m + 1, 0).getDate();
+  return new Date(y, m, Math.min(s.getDate(), last), s.getHours(), s.getMinutes(), s.getSeconds());
+}
+
+// Repeticiones vencidas que todavía no se registraron.
+export function dueOccurrences(rule, until = new Date()) {
+  const last = rule.lastRun ? new Date(rule.lastRun) : null;
+  const out = [];
+  for (let n = 0; n < 1500; n += 1) {
+    const d = nthOccurrence(rule, n);
+    if (d > until) break;
+    if (!last || d > last) out.push(d);
+  }
+  return out;
+}
+
+export function nextOccurrence(rule, after = new Date()) {
+  for (let n = 0; n < 1500; n += 1) {
+    const d = nthOccurrence(rule, n);
+    if (d > after) return d;
+  }
+  return null;
+}
+
+export const occurrenceId = (rule, d) => `${rule.id}-${toInputDate(d)}`;
+
+export const monthlyEquivalent = (rule) =>
+  rule.frecuencia === "semanal" ? (rule.monto * 52) / 12 : rule.frecuencia === "anual" ? rule.monto / 12 : rule.monto;
+
+export function movementFromRule(rule, date) {
+  return {
+    id: occurrenceId(rule, date),
+    tipo: rule.tipo,
+    monto: rule.monto,
+    categoria: rule.categoria,
+    descripcion: rule.descripcion,
+    fecha: date.toISOString(),
+    recurringId: rule.id,
+  };
+}
+
+export function relativeDays(date) {
+  const diff = Math.round((startOfDay(date) - startOfDay(new Date())) / 86400000);
+  if (diff === 0) return "Hoy";
+  if (diff === 1) return "Mañana";
+  if (diff < 0) return `Hace ${-diff} días`;
+  if (diff < 7) return `En ${diff} días`;
+  return new Date(date).toLocaleDateString("es-AR", { day: "numeric", month: "short" }).replace(".", "");
+}
+
+// ---------- Metas de ahorro ----------
+export const GOAL_ICONS = ["✈️", "🏠", "🚗", "💻", "🎓", "💍", "🛟", "🎮", "📱", "🏖️", "🎸", "🐶"];
+export const GOAL_COLORS = ["#5b4cff", "#1baf7a", "#eb6834", "#2a78d6", "#e87ba4", "#eda100"];
+
+export function goalInsight(goal) {
+  const remaining = Math.max(0, goal.target - goal.saved);
+  const pct = goal.target ? Math.min(100, (goal.saved / goal.target) * 100) : 0;
+  let monthly = null;
+  let monthsLeft = null;
+  if (goal.deadline && remaining > 0) {
+    const now = new Date();
+    const end = new Date(goal.deadline);
+    monthsLeft = Math.max(0, (end.getFullYear() - now.getFullYear()) * 12 + end.getMonth() - now.getMonth());
+    monthly = remaining / Math.max(1, monthsLeft);
+  }
+  return { remaining, pct, monthly, monthsLeft, done: remaining === 0 && goal.target > 0 };
+}

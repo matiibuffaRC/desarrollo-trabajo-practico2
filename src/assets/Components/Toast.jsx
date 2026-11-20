@@ -7,8 +7,11 @@ function Toast() {
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-28 z-[60] flex justify-center px-4 md:bottom-8 md:pl-60" role="status" aria-live="polite">
-      <div key={toast.id} className="animate-fade-up pointer-events-auto flex max-w-md items-center gap-3 rounded-2xl bg-ink py-3 pl-4 pr-3 text-sm text-white shadow-2xl">
-        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/15">
+      <div
+        key={toast.id}
+        className="keep-dark animate-pop pointer-events-auto relative flex max-w-md items-center gap-3 overflow-hidden rounded-2xl bg-ink py-3 pl-4 pr-3 text-sm text-white shadow-2xl ring-1 ring-white/10"
+      >
+        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-400/20 text-emerald-300">
           <CheckIcon className="h-3.5 w-3.5" />
         </span>
         <span className="font-medium">{toast.message}</span>
@@ -23,6 +26,12 @@ function Toast() {
             {toast.action.label}
           </button>
         )}
+        {/* Cuenta regresiva hasta que se cierra */}
+        <span
+          className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-white/30"
+          style={{ animation: "toastBar 4.5s linear forwards" }}
+          aria-hidden="true"
+        />
       </div>
     </div>
   );

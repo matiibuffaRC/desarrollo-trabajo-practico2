@@ -13,8 +13,9 @@ import {
 import PageHeader from "../Components/PageHeader";
 import MovementItem from "../Components/MovementItem";
 import ConfirmDialog from "../Components/ConfirmDialog";
-import { IncomeExpenseBars, BalanceArea, CategoryDonut, CategoryList, SimpleBars, Legend } from "../Components/ChartKit";
-import { SparkIcon, TrashIcon } from "../Components/Icons";
+import { IncomeExpenseBars, BalanceArea, CategoryDonut, CategoryList, SimpleBars, Legend, SpendingHeatmap } from "../Components/ChartKit";
+import AnimatedNumber from "../Components/AnimatedNumber";
+import { SparkIcon, TrashIcon, CalendarIcon } from "../Components/Icons";
 
 const RANGES = [
   { id: 3, label: "3M" },
@@ -92,7 +93,7 @@ function StatsPage() {
   };
 
   return (
-    <div className="animate-fade-up">
+    <div>
       <PageHeader
         eyebrow="Insights"
         title="Estadísticas"
@@ -105,7 +106,7 @@ function StatsPage() {
                 role="tab"
                 aria-selected={range === r.id}
                 onClick={() => setRange(r.id)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${range === r.id ? "bg-ink text-white" : "text-slate-500 hover:text-ink"}`}
+                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-300 ${range === r.id ? "scale-105 bg-ink text-white shadow" : "text-slate-500 hover:text-ink"}`}
               >
                 {r.label}
               </button>
@@ -144,15 +145,15 @@ function StatsPage() {
 
       {/* KPIs */}
       <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi label="Ingresos" value={formatMoney(stats.ingresos)} dot={INCOME_COLOR} />
-        <Kpi label="Gastos" value={formatMoney(stats.gastos)} dot={EXPENSE_COLOR} />
+        <Kpi label="Ingresos" value={stats.ingresos} dot={INCOME_COLOR} />
+        <Kpi label="Gastos" value={stats.gastos} dot={EXPENSE_COLOR} />
         <Kpi
           label="Ahorro neto"
-          value={formatMoney(stats.neto)}
+          value={stats.neto}
           hint={stats.ahorro === null ? "Sin ingresos" : `${stats.ahorro.toFixed(1)}% de tus ingresos`}
           valueClass={stats.neto < 0 ? "text-rose-600" : ""}
         />
-        <Kpi label="Gasto diario promedio" value={formatMoney(stats.daily)} hint={`${stats.count} movimientos en el período`} />
+        <Kpi label="Gasto diario promedio" value={stats.daily} hint={`${stats.count} movimientos en el período`} />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -234,6 +235,20 @@ function StatsPage() {
           <SimpleBars data={stats.weekday} height={220} />
         </section>
 
+        {/* Calendario de calor */}
+        <section className="card p-5 lg:col-span-2">
+          <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <h2 className="flex items-center gap-2 text-lg font-extrabold">
+                <CalendarIcon className="h-[18px] w-[18px] text-brand-500" /> Calendario de gastos
+              </h2>
+              <p className="text-xs text-slate-500">Cada cuadrito es un día: cuanto más intenso, más gastaste. Pasá el mouse para ver el total.</p>
+            </div>
+            <span className="rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-bold text-slate-500">Últimas 18 semanas</span>
+          </div>
+          <SpendingHeatmap movements={movements} weeks={18} />
+        </section>
+
         {/* Top gastos */}
         <section className="card p-4 md:p-5 lg:col-span-2">
           <h2 className="mb-2 px-2 text-lg font-extrabold">Gastos más grandes</h2>
@@ -242,7 +257,7 @@ function StatsPage() {
               <div key={m.id} className="flex items-center gap-1">
                 <span className="num w-6 shrink-0 text-center text-sm font-extrabold text-slate-300">{i + 1}</span>
                 <div className="min-w-0 flex-1">
-                  <MovementItem mov={m} showDate />
+                  <MovementItem mov={m} showDate index={i} />
                 </div>
               </div>
             ))
@@ -268,12 +283,14 @@ function StatsPage() {
 
 function Kpi({ label, value, hint, dot, valueClass = "" }) {
   return (
-    <div className="card p-4">
+    <div className="card card-hover p-4">
       <p className="flex items-center gap-1.5 text-xs font-semibold text-slate-400">
         {dot && <span className="h-2 w-2 rounded-full" style={{ backgroundColor: dot }} />}
         {label}
       </p>
-      <p className={`num mt-1 truncate text-lg font-extrabold md:text-xl ${valueClass}`}>{value}</p>
+      <p className={`num mt-1 truncate text-lg font-extrabold md:text-xl ${valueClass}`}>
+        <AnimatedNumber value={value} />
+      </p>
       {hint && <p className="mt-0.5 truncate text-[11px] text-slate-500">{hint}</p>}
     </div>
   );

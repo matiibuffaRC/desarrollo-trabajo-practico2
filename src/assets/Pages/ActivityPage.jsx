@@ -18,6 +18,7 @@ import PageHeader from "../Components/PageHeader";
 import MovementItem from "../Components/MovementItem";
 import Pagination from "../Components/Pagination";
 import ConfirmDialog from "../Components/ConfirmDialog";
+import AnimatedNumber from "../Components/AnimatedNumber";
 import { SearchIcon, FilterIcon, XIcon, DownloadIcon, TrashIcon, ChevronDown } from "../Components/Icons";
 
 const PERIODS = [
@@ -187,7 +188,7 @@ function ActivityPage() {
   };
 
   return (
-    <div className="animate-fade-up">
+    <div>
       <PageHeader
         eyebrow="Historial"
         title="Movimientos"
@@ -221,10 +222,11 @@ function ActivityPage() {
           <label className="relative flex-1">
             <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
             <input
+              id="search-input"
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Buscar movimientos…"
+              placeholder="Buscar movimientos…  ( / )"
               className="input !rounded-xl pl-9"
               aria-label="Buscar movimientos"
             />
@@ -363,7 +365,7 @@ function ActivityPage() {
         {active.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-3">
             {active.map((a) => (
-              <span key={a.key} className="inline-flex items-center gap-1 rounded-full bg-brand-50 py-1 pl-2.5 pr-1 text-xs font-bold text-brand-700">
+              <span key={a.key} className="animate-pop inline-flex items-center gap-1 rounded-full bg-brand-50 py-1 pl-2.5 pr-1 text-xs font-bold text-brand-700">
                 {a.label}
                 <button onClick={a.clear} className="rounded-full p-0.5 hover:bg-brand-100" aria-label={`Quitar filtro ${a.label}`}>
                   <XIcon className="h-3 w-3" />
@@ -401,6 +403,7 @@ function ActivityPage() {
           </div>
         ) : (
           <>
+            <div key={`${safePage}-${params.toString()}`}>
             {groups.map((g) => (
               <div key={g.key} className="mb-2 last:mb-0">
                 {g.label && (
@@ -416,6 +419,7 @@ function ActivityPage() {
                   <MovementItem
                     key={m.id}
                     mov={m}
+                    index={pageItems.indexOf(m)}
                     showDate={!groupByDay}
                     onEdit={(mov) => openForm(mov)}
                     onDuplicate={(mov) => openForm({ ...mov, __duplicate: true })}
@@ -424,6 +428,7 @@ function ActivityPage() {
                 ))}
               </div>
             ))}
+            </div>
 
             <div className="border-t border-slate-100">
               <Pagination
@@ -469,11 +474,11 @@ function ActivityPage() {
 
 function SummaryTile({ label, value, className }) {
   return (
-    <div className="card px-3 py-3 md:px-4">
+    <div className="card card-hover px-3 py-3 md:px-4">
       <p className="text-[11px] font-semibold text-slate-400">{label}</p>
       <p className={`num mt-0.5 truncate text-sm font-extrabold md:text-lg ${className}`}>
-        <span className="md:hidden">{formatCompact(value)}</span>
-        <span className="hidden md:inline">{formatMoney(value)}</span>
+        <AnimatedNumber value={value} format={formatCompact} className="md:hidden" />
+        <AnimatedNumber value={value} className="hidden md:inline" />
       </p>
     </div>
   );

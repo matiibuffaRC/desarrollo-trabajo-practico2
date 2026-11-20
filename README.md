@@ -36,12 +36,28 @@ Funcionalidades:
     - Gasto por día de la semana.
     - Top 5 gastos más grandes.
     - Generador de datos de ejemplo realistas (sueldo, alquiler, servicios, suscripciones y gastos variables).
-- **Perfil**: nombre y correo editables, resumen general, límite mensual, exportación CSV, backup/restauración en JSON y borrado de datos.
+    - Calendario de gastos de las últimas 18 semanas (mapa de calor por día).
+- **Planificar**: página con submenú fijo que resalta la sección visible al hacer scroll.
+    - **Metas de ahorro**: ícono, color, objetivo y fecha límite, anillo de progreso, ahorro mensual necesario, aportes y retiros con historial.
+    - **Presupuestos por categoría**: tope mensual por categoría, barra de distribución y barras de uso que cambian de color según el consumo. Alerta en el Inicio si alguna se excede.
+    - **Movimientos recurrentes** (semanales, mensuales o anuales): se registran automáticamente al llegar la fecha, se pueden pausar, editar o eliminar, y muestran el total fijo mensual.
+- **Formulario**: opción "Repetir" para crear un recurrente y autocompletado de descripciones anteriores (completa categoría y monto).
+- **Modo oscuro** (claro, oscuro o según el sistema) sin parpadeo al cargar.
+- **Modo privacidad**: oculta todos los montos con un difuminado.
+- **Atajos de teclado**: `N` nuevo movimiento, `/` buscar, `P` ocultar montos y `1`–`5` para cambiar de sección.
+- **Perfil**: nombre y correo editables, tema, modo privacidad, resumen general, límite mensual, exportación CSV, backup/restauración en JSON (incluye metas, presupuestos y recurrentes) y borrado de datos.
+
+Animaciones:
+
+- Aparición de tarjetas al hacer scroll (fade, desplazamiento y blur en cascada) y barras de progreso que se llenan al entrar en pantalla.
+- Barra de progreso de scroll, botón para volver arriba y menú inferior mobile que se oculta al bajar.
+- Transiciones entre páginas e indicadores deslizantes en la navegación y los selectores.
+- Montos que cuentan hasta su valor, anillos de progreso animados y listas escalonadas.
+- Tarjeta de saldo con fondo animado y brillo, modales tipo resorte y toasts con cuenta regresiva.
+- Se respetan las preferencias de "reducir movimiento" del sistema.
 
 Potenciales mejoras para la aplicación:
 
-    - Modo oscuro.
-    - Presupuestos por categoría y movimientos recurrentes.
     - Conexión de una base de datos. 
     - Posibilidad de crear usuarios para más personas utilicen la aplicación.
     - Posiblidad de anexar con alguna aplicación de una billetera virtual para eliminar la necesidad de la carga manual de todas las transacciones mediante una API.

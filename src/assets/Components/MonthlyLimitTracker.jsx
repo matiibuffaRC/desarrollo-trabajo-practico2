@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useApp } from "../../lib/AppContext";
 import { formatMoney, formatCompact } from "../../lib/finance";
-import { EditIcon, AlertIcon, CheckIcon } from "./Icons";
+import { EditIcon, AlertIcon, CheckIcon, ChevronRight } from "./Icons";
+import AnimatedNumber from "./AnimatedNumber";
 
-function MonthlyLimitTracker({ spent }) {
+function MonthlyLimitTracker({ spent, overBudget = [] }) {
   const { monthlyLimit, setMonthlyLimit, showToast } = useApp();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(String(monthlyLimit));
@@ -49,7 +51,7 @@ function MonthlyLimitTracker({ spent }) {
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-400">Presupuesto del mes</p>
           <p className="num mt-1 text-2xl font-extrabold">
-            {formatMoney(spent)}
+            <AnimatedNumber value={spent} />
             <span className="text-sm font-semibold text-slate-400"> / {formatMoney(monthlyLimit)}</span>
           </p>
         </div>
@@ -108,7 +110,7 @@ function MonthlyLimitTracker({ spent }) {
           {/* Barra de progreso con marcador del día del mes */}
           <div className="relative mt-4">
             <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
-              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: status.bar }} />
+              <div className="fill-on-reveal h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: status.bar }} />
             </div>
             <div
               className="absolute -top-1 h-[18px] w-0.5 rounded bg-ink/40"
@@ -133,6 +135,18 @@ function MonthlyLimitTracker({ spent }) {
             <status.Icon className="h-4 w-4" />
             {status.label}
           </div>
+          {overBudget.length > 0 && (
+            <Link
+              to="/plan#presupuestos"
+              className="animate-fade-up mt-2 flex items-center gap-2 rounded-xl bg-rose-50 px-3 py-2 text-xs font-bold text-rose-700 transition hover:bg-rose-100"
+            >
+              <AlertIcon className="h-4 w-4 shrink-0" />
+              <span className="min-w-0 flex-1 truncate">
+                {overBudget.length === 1 ? `${overBudget[0]} superó su presupuesto` : `${overBudget.length} categorías superaron su presupuesto`}
+              </span>
+              <ChevronRight className="h-4 w-4 shrink-0" />
+            </Link>
+          )}
         </>
       )}
     </section>

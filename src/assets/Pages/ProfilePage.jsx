@@ -3,10 +3,59 @@ import { useApp } from "../../lib/AppContext";
 import { formatMoney, sumBy, exportCSV } from "../../lib/finance";
 import PageHeader from "../Components/PageHeader";
 import ConfirmDialog from "../Components/ConfirmDialog";
-import { EditIcon, DownloadIcon, UploadIcon, TrashIcon, ChevronRight } from "../Components/Icons";
+import AnimatedNumber from "../Components/AnimatedNumber";
+import {
+  EditIcon,
+  DownloadIcon,
+  UploadIcon,
+  TrashIcon,
+  ChevronRight,
+  SunIcon,
+  MoonIcon,
+  MonitorIcon,
+  EyeIcon,
+  EyeOffIcon,
+  KeyboardIcon,
+} from "../Components/Icons";
+
+const THEMES = [
+  { id: "light", label: "Claro", Icon: SunIcon },
+  { id: "dark", label: "Oscuro", Icon: MoonIcon },
+  { id: "system", label: "Sistema", Icon: MonitorIcon },
+];
+
+const SHORTCUTS = [
+  ["N", "Nuevo movimiento"],
+  ["/", "Buscar movimientos"],
+  ["P", "Ocultar / mostrar montos"],
+  ["1–5", "Cambiar de sección"],
+  ["Esc", "Cerrar ventanas"],
+];
+
+const isPlainObject = (v) => v && typeof v === "object" && !Array.isArray(v);
 
 function ProfilePage() {
-  const { movements, setMovements, total, profile, setProfile, monthlyLimit, setMonthlyLimit, showToast } = useApp();
+  const {
+    movements,
+    setMovements,
+    total,
+    profile,
+    setProfile,
+    monthlyLimit,
+    setMonthlyLimit,
+    showToast,
+    theme,
+    setTheme,
+    privacy,
+    setPrivacy,
+    budgets,
+    setBudgets,
+    goals,
+    setGoals,
+    recurring,
+    setRecurring,
+    resetAll,
+  } = useApp();
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(profile);
   const [error, setError] = useState("");
@@ -39,7 +88,8 @@ function ProfilePage() {
   };
 
   const exportBackup = () => {
-    const blob = new Blob([JSON.stringify({ version: 1, profile, monthlyLimit, movements }, null, 2)], { type: "application/json" });
+    const payload = { version: 2, profile, monthlyLimit, movements, budgets, goals, recurring };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -62,6 +112,9 @@ function ProfilePage() {
       setMovements(list.map((m) => ({ ...m, monto: Number(m.monto) })));
       if (data.profile) setProfile((p) => ({ ...p, ...data.profile }));
       if (Number(data.monthlyLimit) > 0) setMonthlyLimit(Number(data.monthlyLimit));
+      if (isPlainObject(data.budgets)) setBudgets(data.budgets);
+      if (Array.isArray(data.goals)) setGoals(data.goals);
+      if (Array.isArray(data.recurring)) setRecurring(data.recurring);
       showToast(`${list.length} movimientos restaurados`);
     } catch {
       showToast("El archivo no es un backup válido");
@@ -69,19 +122,20 @@ function ProfilePage() {
   };
 
   const initial = profile.name.charAt(0).toUpperCase();
+  const themeIndex = THEMES.findIndex((t) => t.id === theme);
 
   return (
-    <div className="animate-fade-up">
-      <PageHeader eyebrow="Cuenta" title="Mi perfil" subtitle="Tu información, tus datos y la configuración de la app." />
+    <div>
+      <PageHeader eyebrow="Cuenta" title="Mi perfil" subtitle="Tu información, tus datos y la configuración de la app." showAvatar={false} />
 
       <div className="grid gap-5 lg:grid-cols-[1.2fr_1fr]">
         <div className="flex flex-col gap-5">
           {/* Tarjeta de perfil */}
           <section className="card overflow-hidden">
-            <div className="h-20 bg-gradient-to-r from-brand-500 via-indigo-400 to-emerald-300" />
+            <div className="profile-banner h-20" />
             <div className="px-5 pb-5">
               <div className="-mt-10 flex items-end justify-between">
-                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-ink text-3xl font-extrabold text-white ring-4 ring-white">
+                <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-ink text-3xl font-extrabold text-white ring-4 ring-white transition duration-300 hover:-rotate-6 hover:scale-105">
                   {initial}
                 </div>
                 {!editing && (
@@ -90,7 +144,7 @@ function ProfilePage() {
                       setDraft(profile);
                       setEditing(true);
                     }}
-                    className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-200"
+                    className="flex items-center gap-1.5 rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-700 transition hover:bg-slate-200"
                   >
                     <EditIcon className="h-3.5 w-3.5" /> Editar
                   </button>
@@ -133,16 +187,68 @@ function ProfilePage() {
 
           {/* Resumen */}
           <div className="grid grid-cols-2 gap-3">
-            <Stat label="Saldo actual" value={formatMoney(total)} valueClass={total < 0 ? "text-rose-600" : ""} />
-            <Stat label="Movimientos" value={stats.count} />
-            <Stat label="Total ingresado" value={formatMoney(stats.ingresos)} valueClass="text-income" />
-            <Stat label="Total gastado" value={formatMoney(stats.gastos)} valueClass="text-expense" />
+            <Stat label="Saldo actual" value={<AnimatedNumber value={total} />} valueClass={total < 0 ? "text-rose-600" : ""} />
+            <Stat label="Movimientos" value={<AnimatedNumber value={stats.count} format={(n) => Math.round(n)} />} valueClass="no-privacy" />
+            <Stat label="Total ingresado" value={<AnimatedNumber value={stats.ingresos} />} valueClass="text-income" />
+            <Stat label="Total gastado" value={<AnimatedNumber value={stats.gastos} />} valueClass="text-expense" />
           </div>
+
+          {/* Atajos */}
+          <section className="card hidden p-5 md:block">
+            <h3 className="mb-2 flex items-center gap-2 text-sm font-extrabold">
+              <KeyboardIcon className="h-4 w-4 text-brand-500" /> Atajos de teclado
+            </h3>
+            {SHORTCUTS.map(([k, label]) => (
+              <div key={k} className="flex items-center justify-between border-b border-[var(--line)] py-2 text-sm last:border-0">
+                <span className="text-slate-600">{label}</span>
+                <kbd className="rounded-lg border border-[var(--line)] bg-slate-50 px-2 py-0.5 text-xs font-bold text-slate-600 shadow-[0_2px_0_var(--line)]">{k}</kbd>
+              </div>
+            ))}
+          </section>
         </div>
 
         {/* Ajustes */}
-        <section className="card p-2">
-          <p className="px-3 pb-1 pt-3 text-xs font-bold uppercase tracking-wider text-slate-400">Presupuesto</p>
+        <section className="card self-start p-2">
+          <p className="px-3 pb-2 pt-3 text-xs font-bold uppercase tracking-wider text-slate-400">Apariencia</p>
+          <div className="relative mx-3 grid grid-cols-3 gap-1 rounded-2xl bg-slate-100 p-1">
+            <span
+              className="absolute bottom-1 left-1 top-1 w-[calc((100%-16px)/3)] rounded-xl bg-white shadow-sm transition-transform duration-500 ease-[cubic-bezier(0.2,0.9,0.3,1.2)]"
+              style={{ transform: `translateX(calc(${themeIndex} * (100% + 4px)))` }}
+              aria-hidden="true"
+            />
+            {THEMES.map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                onClick={() => setTheme(id)}
+                aria-pressed={theme === id}
+                className={`relative flex items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-bold transition-colors ${theme === id ? "text-ink" : "text-slate-500 hover:text-ink"}`}
+              >
+                <Icon className="h-4 w-4" /> {label}
+              </button>
+            ))}
+          </div>
+
+          <button
+            onClick={() => setPrivacy((p) => !p)}
+            role="switch"
+            aria-checked={privacy}
+            className="mt-2 flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition hover:bg-slate-50"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-600">
+              {privacy ? <EyeOffIcon className="h-[18px] w-[18px]" /> : <EyeIcon className="h-[18px] w-[18px]" />}
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-bold">Ocultar montos</span>
+              <span className="block truncate text-xs text-slate-500">Ideal para usar la app en público (atajo: P)</span>
+            </span>
+            <span className={`relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300 ${privacy ? "bg-brand-500" : "bg-slate-200"}`}>
+              <span
+                className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-snow shadow transition-transform duration-300 ease-[cubic-bezier(0.2,0.9,0.3,1.3)] ${privacy ? "translate-x-5" : ""}`}
+              />
+            </span>
+          </button>
+
+          <p className="px-3 pb-1 pt-4 text-xs font-bold uppercase tracking-wider text-slate-400">Presupuesto</p>
           <div className="flex items-center justify-between gap-3 rounded-2xl px-3 py-3">
             <div>
               <p className="text-sm font-bold">Límite mensual</p>
@@ -168,12 +274,12 @@ function ProfilePage() {
 
           <p className="px-3 pb-1 pt-4 text-xs font-bold uppercase tracking-wider text-slate-400">Tus datos</p>
           <SettingRow icon={DownloadIcon} title="Exportar a CSV" subtitle="Abrilo en Excel o Google Sheets" onClick={() => exportCSV(movements)} disabled={!movements.length} />
-          <SettingRow icon={DownloadIcon} title="Descargar backup" subtitle="Archivo JSON con todos tus datos" onClick={exportBackup} />
-          <SettingRow icon={UploadIcon} title="Restaurar backup" subtitle="Reemplaza los movimientos actuales" onClick={() => fileRef.current?.click()} />
+          <SettingRow icon={DownloadIcon} title="Descargar backup" subtitle="JSON con movimientos, metas, presupuestos y recurrentes" onClick={exportBackup} />
+          <SettingRow icon={UploadIcon} title="Restaurar backup" subtitle="Reemplaza los datos actuales" onClick={() => fileRef.current?.click()} />
           <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={importBackup} />
 
           <p className="px-3 pb-1 pt-4 text-xs font-bold uppercase tracking-wider text-slate-400">Zona de peligro</p>
-          <SettingRow icon={TrashIcon} title="Borrar todos los datos" subtitle="Elimina movimientos y reinicia la app" danger onClick={() => setConfirmReset(true)} />
+          <SettingRow icon={TrashIcon} title="Borrar todos los datos" subtitle="Movimientos, metas, presupuestos y recurrentes" danger onClick={() => setConfirmReset(true)} />
           <p className="px-3 pb-3 pt-4 text-center text-[11px] text-slate-400">Los datos se guardan solo en este navegador.</p>
         </section>
       </div>
@@ -181,12 +287,12 @@ function ProfilePage() {
       {confirmReset && (
         <ConfirmDialog
           title="¿Borrar todos los datos?"
-          message="Se eliminan todos los movimientos de este navegador. Te recomendamos descargar un backup antes."
+          message="Se eliminan movimientos, metas, presupuestos y recurrentes de este navegador. Te recomendamos descargar un backup antes."
           confirmLabel="Borrar todo"
           danger
           onCancel={() => setConfirmReset(false)}
           onConfirm={() => {
-            setMovements([]);
+            resetAll();
             setConfirmReset(false);
             showToast("Se borraron todos los datos");
           }}
@@ -198,7 +304,7 @@ function ProfilePage() {
 
 function Stat({ label, value, valueClass = "" }) {
   return (
-    <div className="card p-4">
+    <div className="card card-hover p-4">
       <p className="text-xs font-semibold text-slate-400">{label}</p>
       <p className={`num mt-1 truncate text-lg font-extrabold ${valueClass}`}>{value}</p>
     </div>
@@ -210,16 +316,16 @@ function SettingRow({ icon: Icon, title, subtitle, onClick, danger, disabled }) 
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition disabled:opacity-40 ${danger ? "hover:bg-rose-50" : "hover:bg-slate-50"}`}
+      className={`group flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition disabled:opacity-40 ${danger ? "hover:bg-rose-50" : "hover:bg-slate-50"}`}
     >
-      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${danger ? "bg-rose-50 text-rose-600" : "bg-slate-100 text-slate-600"}`}>
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-110 ${danger ? "bg-rose-50 text-rose-600" : "bg-slate-100 text-slate-600"}`}>
         <Icon className="h-[18px] w-[18px]" />
       </span>
       <span className="min-w-0 flex-1">
         <span className={`block text-sm font-bold ${danger ? "text-rose-600" : ""}`}>{title}</span>
         <span className="block truncate text-xs text-slate-500">{subtitle}</span>
       </span>
-      <ChevronRight className="h-4 w-4 text-slate-300" />
+      <ChevronRight className="h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-1" />
     </button>
   );
 }

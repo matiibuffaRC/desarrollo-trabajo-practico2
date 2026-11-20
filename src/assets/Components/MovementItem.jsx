@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { getCategory, formatMoney } from "../../lib/finance";
 import { DotsIcon, EditIcon, CopyIcon, TrashIcon } from "./Icons";
 
-function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, compact = false }) {
+function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, compact = false, index }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const ref = useRef(null);
   const cat = getCategory(mov);
@@ -23,9 +23,13 @@ function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, co
   }, [menuOpen]);
 
   return (
-    <div ref={ref} className={`group relative flex items-center gap-3 rounded-2xl px-2 transition hover:bg-slate-50 ${compact ? "py-2" : "py-2.5"}`}>
+    <div
+      ref={ref}
+      className={`group relative flex items-center gap-3 rounded-2xl px-2 transition-colors hover:bg-slate-50 ${compact ? "py-2" : "py-2.5"} ${index !== undefined ? "stagger-item" : ""} ${menuOpen ? "z-20" : ""}`}
+      style={index !== undefined ? { animationDelay: `${Math.min(index, 12) * 45}ms` } : undefined}
+    >
       <div
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg"
+        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
         style={{ backgroundColor: `${cat.color}1f` }}
         aria-hidden="true"
       >
@@ -46,6 +50,7 @@ function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, co
               ? ` · ${date.toLocaleDateString("es-AR", { day: "numeric", month: "short" }).replace(".", "")}`
               : ` · ${date.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`}
             {mov.isMock && <span className="ml-1.5 rounded bg-slate-100 px-1 py-px text-[10px] font-semibold text-slate-400">demo</span>}
+            {mov.recurringId && <span className="ml-1.5 rounded bg-brand-50 px-1 py-px text-[10px] font-semibold text-brand-600">🔁 recurrente</span>}
           </p>
         </div>
         <p className={`num shrink-0 text-[15px] font-extrabold ${isIncome ? "text-income" : "text-ink"}`}>
