@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, lazy, Suspense } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from "../../lib/AppContext";
 import {
@@ -18,7 +18,10 @@ import MonthlyLimitTracker from "../Components/MonthlyLimitTracker";
 import MovementItem from "../Components/MovementItem";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import AnimatedNumber from "../Components/AnimatedNumber";
-import { BalanceArea, CategoryList } from "../Components/ChartKit";
+import { CategoryList } from "../Components/CategoryList";
+
+// El mini gráfico usa recharts: se carga aparte para no frenar el primer render
+const BalanceArea = lazy(() => import("../Components/ChartKit").then((m) => ({ default: m.BalanceArea })));
 import { ArrowUp, ArrowDown, ChevronRight, SparkIcon, PlusIcon, EyeIcon, EyeOffIcon, RepeatIcon, TargetIcon, AppIcon } from "../Components/Icons";
 
 function greeting() {
@@ -123,7 +126,9 @@ function Homepage() {
               </p>
 
               <div className="-mx-2 mt-4 h-16">
-                <BalanceArea data={data.trend} compact height={64} color="#8fd3ff" />
+                <Suspense fallback={null}>
+                  <BalanceArea data={data.trend} compact height={64} color="#8fd3ff" />
+                </Suspense>
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">

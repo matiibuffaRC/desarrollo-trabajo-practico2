@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://desarrollo-trabajo-practico2.vercel.app/sitemap.xml

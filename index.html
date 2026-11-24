@@ -1,15 +1,50 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-AR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Gestor de gastos · Controlá tus finanzas personales</title>
+    <meta name="description" content="Registrá ingresos y gastos, controlá tu presupuesto mensual y mirá en qué se va tu plata. Gratis y sin registrarte." />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://desarrollo-trabajo-practico2.vercel.app/" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#f5f5fa" />
-    <meta name="description" content="Gestor de gastos personal: registrá ingresos y gastos, controlá tu presupuesto y mirá tus estadísticas." />
-    <title>Gestor de gastos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" rel="stylesheet">
+    <meta name="color-scheme" content="light dark" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Gastos" />
+
+    <!-- Open Graph / redes sociales -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Gestor de gastos" />
+    <meta property="og:title" content="Gestor de gastos · Controlá tus finanzas personales" />
+    <meta property="og:description" content="Registrá ingresos y gastos, controlá tu presupuesto mensual y mirá en qué se va tu plata. Gratis y sin registrarte." />
+    <meta property="og:url" content="https://desarrollo-trabajo-practico2.vercel.app/" />
+    <meta name="twitter:card" content="summary" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Gestor de gastos",
+        "url": "https://desarrollo-trabajo-practico2.vercel.app/",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "es-AR",
+        "description": "Registrá ingresos y gastos, controlá tu presupuesto mensual y mirá tus estadísticas.",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "ARS" }
+      }
+    </script>
+
+    <!-- Fuente sin bloquear el primer render -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400..800&display=swap" /></noscript>
+
     <script>
       // Aplica el tema antes de pintar para evitar el parpadeo blanco
       try {
@@ -21,6 +56,10 @@
     </script>
   </head>
   <body>
+    <noscript>
+      <h1>Gestor de gastos</h1>
+      <p>Registrá ingresos y gastos, controlá tu presupuesto mensual y mirá tus estadísticas. Necesitás activar JavaScript para usar la aplicación.</p>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

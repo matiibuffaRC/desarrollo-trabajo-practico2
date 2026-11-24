@@ -1,0 +1,11 @@
+{
+  "name": "Gestor de gastos",
+  "short_name": "Gastos",
+  "description": "Registrá ingresos y gastos, controlá tu presupuesto y mirá tus estadísticas.",
+  "lang": "es-AR",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f5fa",
+  "theme_color": "#1a8fe3",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
