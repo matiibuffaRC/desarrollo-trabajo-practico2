@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getCategory, formatMoney } from "../../lib/finance";
-import { DotsIcon, EditIcon, CopyIcon, TrashIcon } from "./Icons";
+import { DotsIcon, EditIcon, CopyIcon, TrashIcon, RepeatIcon, AppIcon } from "./Icons";
 
 function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, compact = false, index }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -30,10 +30,10 @@ function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, co
     >
       <div
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110"
-        style={{ backgroundColor: `${cat.color}1f` }}
+        style={{ backgroundColor: `${cat.color}1f`, color: cat.color }}
         aria-hidden="true"
       >
-        {cat.icon}
+        <AppIcon name={cat.icon} className="h-5 w-5" />
       </div>
 
       <button
@@ -50,7 +50,7 @@ function MovementItem({ mov, onEdit, onDuplicate, onDelete, showDate = false, co
               ? ` · ${date.toLocaleDateString("es-AR", { day: "numeric", month: "short" }).replace(".", "")}`
               : ` · ${date.toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" })}`}
             {mov.isMock && <span className="ml-1.5 rounded bg-slate-100 px-1 py-px text-[10px] font-semibold text-slate-400">demo</span>}
-            {mov.recurringId && <span className="ml-1.5 rounded bg-brand-50 px-1 py-px text-[10px] font-semibold text-brand-600">🔁 recurrente</span>}
+            {mov.recurringId && <span className="ml-1.5 rounded bg-brand-50 px-1 py-px text-[10px] font-semibold text-brand-600"><RepeatIcon className="mr-0.5 inline h-2.5 w-2.5 align-[-1px]" />recurrente</span>}
           </p>
         </div>
         <p className={`num shrink-0 text-[15px] font-extrabold ${isIncome ? "text-income" : "text-ink"}`}>

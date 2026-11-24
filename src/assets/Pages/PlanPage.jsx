@@ -24,7 +24,7 @@ import Modal from "../Components/Modal";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import ProgressRing from "../Components/ProgressRing";
 import AnimatedNumber from "../Components/AnimatedNumber";
-import { PlusIcon, MinusIcon, EditIcon, TrashIcon, TargetIcon, PieIcon, RepeatIcon, PauseIcon, PlayIcon, CheckIcon } from "../Components/Icons";
+import { PlusIcon, MinusIcon, EditIcon, TrashIcon, TargetIcon, PieIcon, RepeatIcon, PauseIcon, PlayIcon, CheckIcon, XIcon, AppIcon } from "../Components/Icons";
 
 const SECTIONS = [
   { id: "metas", label: "Metas", Icon: TargetIcon },
@@ -157,7 +157,7 @@ function GoalsSection() {
           onClick={() => setEditing("new")}
           className="card card-hover flex w-full flex-col items-center gap-3 border-2 border-dashed !border-slate-200 px-6 py-10 text-center"
         >
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-3xl">🎯</span>
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-500"><TargetIcon className="h-7 w-7" /></span>
           <span className="font-bold">Creá tu primera meta</span>
           <span className="max-w-xs text-sm text-slate-500">Un viaje, un fondo de emergencia o una compra grande: separá tu ahorro y mirá cuánto te falta.</span>
         </button>
@@ -170,7 +170,7 @@ function GoalsSection() {
                 <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full opacity-20 blur-2xl" style={{ backgroundColor: g.color }} />
                 <div className="relative flex items-start gap-4">
                   <ProgressRing pct={ins.pct} color={g.color} size={84}>
-                    <span className="text-2xl leading-none">{ins.done ? "🏆" : g.icon}</span>
+                    <AppIcon name={ins.done ? "trophy" : g.icon} className="h-6 w-6" style={{ color: g.color }} />
                     <span className="no-privacy mt-0.5 text-[11px] font-extrabold">{ins.pct.toFixed(0)}%</span>
                   </ProgressRing>
                   <div className="min-w-0 flex-1">
@@ -263,7 +263,7 @@ function GoalsSection() {
               )
             );
             const nowDone = goal.saved + delta >= goal.target;
-            showToast(nowDone && !wasDone ? `🎉 ¡Completaste "${goal.name}"!` : `${mode === "add" ? "Aportaste" : "Retiraste"} ${formatMoney(Math.abs(delta))}`);
+            showToast(nowDone && !wasDone ? `¡Completaste "${goal.name}"!` : `${mode === "add" ? "Aportaste" : "Retiraste"} ${formatMoney(Math.abs(delta))}`);
           }}
         />
       )}
@@ -340,9 +340,9 @@ function GoalForm({ goal, onClose, onSave }) {
                   key={ic}
                   type="button"
                   onClick={() => setIcon(ic)}
-                  className={`flex h-10 items-center justify-center rounded-xl text-xl transition active:scale-90 ${icon === ic ? "bg-brand-50 ring-2 ring-brand-500" : "bg-slate-50 hover:bg-slate-100"}`}
+                  className={`flex h-10 items-center justify-center rounded-xl transition active:scale-90 ${icon === ic ? "bg-brand-50 ring-2 ring-brand-500" : "bg-slate-50 hover:bg-slate-100"}`}
                 >
-                  {ic}
+                  <AppIcon name={ic} className="h-5 w-5" style={{ color: icon === ic ? color : undefined }} />
                 </button>
               ))}
             </div>
@@ -516,8 +516,8 @@ function BudgetsSection() {
             return (
               <li key={c.name} className="stagger-item rounded-2xl px-3 py-3 transition-colors hover:bg-slate-50" style={{ animationDelay: `${i * 40}ms` }}>
                 <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg" style={{ backgroundColor: `${c.color}1f` }}>
-                    {c.icon}
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-lg" style={{ backgroundColor: `${c.color}1f`, color: c.color }}>
+                    <AppIcon name={c.icon} className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
@@ -571,8 +571,8 @@ function BudgetsSection() {
                     <button onClick={() => save(c.name)} className="rounded-xl bg-ink px-3 text-sm font-bold text-white">
                       Guardar
                     </button>
-                    <button onClick={() => setEditing(null)} className="rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-600">
-                      ✕
+                    <button onClick={() => setEditing(null)} className="rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-600" aria-label="Cancelar">
+                      <XIcon className="h-4 w-4" />
                     </button>
                   </div>
                 ) : (
@@ -670,8 +670,8 @@ function RecurringSection() {
                   className={`stagger-item flex items-center gap-3 rounded-2xl px-3 py-3 transition hover:bg-slate-50 ${rule.active ? "" : "opacity-55"}`}
                   style={{ animationDelay: `${i * 50}ms` }}
                 >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg" style={{ backgroundColor: `${cat.color}1f` }}>
-                    {cat.icon}
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg" style={{ backgroundColor: `${cat.color}1f`, color: cat.color }}>
+                    <AppIcon name={cat.icon} className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[15px] font-bold">{rule.descripcion}</p>
@@ -790,7 +790,7 @@ function RecurringForm({ rule, onClose, onSave }) {
             <div className="mt-2 flex flex-wrap gap-1.5">
               {categories.map((c) => (
                 <button key={c.name} type="button" className="chip" data-active={categoria === c.name} onClick={() => setCategoria(c.name)}>
-                  {c.icon} {c.name}
+                  <AppIcon name={c.icon} className="h-3.5 w-3.5" /> {c.name}
                 </button>
               ))}
             </div>

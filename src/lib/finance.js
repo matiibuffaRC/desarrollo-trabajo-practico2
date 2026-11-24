@@ -3,21 +3,21 @@
 // Paleta categórica en orden fijo (validada para daltonismo en pares adyacentes).
 // El color sigue a la categoría, nunca a su posición en un ranking.
 export const EXPENSE_CATEGORIES = [
-  { name: "Comida", icon: "🍔", color: "#2a78d6" },
-  { name: "Transporte", icon: "🚌", color: "#eb6834" },
-  { name: "Servicios", icon: "💡", color: "#1baf7a" },
-  { name: "Entretenimiento", icon: "🎬", color: "#eda100" },
-  { name: "Compras", icon: "🛍️", color: "#e87ba4" },
-  { name: "Salud", icon: "💊", color: "#008300" },
-  { name: "Hogar", icon: "🏠", color: "#6250d6" },
-  { name: "Otros", icon: "📦", color: "#898781" },
+  { name: "Comida", icon: "food", color: "#2a78d6" },
+  { name: "Transporte", icon: "transport", color: "#eb6834" },
+  { name: "Servicios", icon: "services", color: "#1baf7a" },
+  { name: "Entretenimiento", icon: "entertainment", color: "#eda100" },
+  { name: "Compras", icon: "shopping", color: "#e87ba4" },
+  { name: "Salud", icon: "health", color: "#008300" },
+  { name: "Hogar", icon: "home", color: "#6250d6" },
+  { name: "Otros", icon: "other", color: "#898781" },
 ];
 
 export const INCOME_CATEGORIES = [
-  { name: "Sueldo", icon: "💼", color: "#1baf7a" },
-  { name: "Freelance", icon: "💻", color: "#2a78d6" },
-  { name: "Inversiones", icon: "📈", color: "#6250d6" },
-  { name: "Otros ingresos", icon: "💰", color: "#898781" },
+  { name: "Sueldo", icon: "salary", color: "#1baf7a" },
+  { name: "Freelance", icon: "laptop", color: "#2a78d6" },
+  { name: "Inversiones", icon: "investments", color: "#6250d6" },
+  { name: "Otros ingresos", icon: "coins", color: "#898781" },
 ];
 
 export const INCOME_COLOR = "#1baf7a";
@@ -29,8 +29,8 @@ export function getCategory(mov) {
   const found = ALL_CATEGORIES.find((c) => c.name === mov?.categoria);
   if (found) return found;
   return mov?.tipo === "Ingreso"
-    ? { name: "Ingreso", icon: "💰", color: INCOME_COLOR }
-    : { name: mov?.categoria || "Otros", icon: "📦", color: "#898781" };
+    ? { name: "Ingreso", icon: "coins", color: INCOME_COLOR }
+    : { name: mov?.categoria || "Otros", icon: "other", color: "#898781" };
 }
 
 const currencyFmt = new Intl.NumberFormat("es-AR", {
@@ -173,7 +173,7 @@ export function categoryBreakdown(movements) {
     .concat(
       Object.keys(totals)
         .filter((n) => !EXPENSE_CATEGORIES.some((c) => c.name === n))
-        .map((n) => ({ name: n, icon: "📦", color: "#898781", value: totals[n], pct: (totals[n] / total) * 100 }))
+        .map((n) => ({ name: n, icon: "other", color: "#898781", value: totals[n], pct: (totals[n] / total) * 100 }))
     );
 }
 
@@ -336,8 +336,8 @@ export function relativeDays(date) {
 }
 
 // ---------- Metas de ahorro ----------
-export const GOAL_ICONS = ["✈️", "🏠", "🚗", "💻", "🎓", "💍", "🛟", "🎮", "📱", "🏖️", "🎸", "🐶"];
-export const GOAL_COLORS = ["#5b4cff", "#1baf7a", "#eb6834", "#2a78d6", "#e87ba4", "#eda100"];
+export const GOAL_ICONS = ["plane", "home", "car", "laptop", "education", "ring", "emergency", "games", "phone", "beach", "music", "pet"];
+export const GOAL_COLORS = ["#1a8fe3", "#1baf7a", "#eb6834", "#2a78d6", "#e87ba4", "#eda100"];
 
 export function goalInsight(goal) {
   const remaining = Math.max(0, goal.target - goal.saved);

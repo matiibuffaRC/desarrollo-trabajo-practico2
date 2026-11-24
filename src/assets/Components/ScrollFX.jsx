@@ -88,7 +88,7 @@ export function ScrollProgress({ progress }) {
   return (
     <div className="pointer-events-none fixed inset-x-0 top-0 z-[70] h-[3px]" aria-hidden="true">
       <div
-        className="h-full origin-left bg-gradient-to-r from-brand-500 via-indigo-400 to-emerald-400"
+        className="h-full origin-left bg-gradient-to-r from-brand-500 via-sky-400 to-emerald-400"
         style={{ transform: `scaleX(${progress})`, transition: "transform 0.12s linear" }}
       />
     </div>

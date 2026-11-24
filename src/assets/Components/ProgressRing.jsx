@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 // Anillo de progreso que se llena con animación al montarse.
-function ProgressRing({ pct, size = 88, stroke = 9, color = "#5b4cff", children }) {
+function ProgressRing({ pct, size = 88, stroke = 9, color = "#1a8fe3", children }) {
   const [shown, setShown] = useState(0);
   useEffect(() => {
     const t = setTimeout(() => setShown(Math.max(0, Math.min(100, pct))), 150);

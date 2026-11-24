@@ -10,7 +10,7 @@ import {
   signedAmount,
   occurrenceId,
 } from "../../lib/finance";
-import { XIcon, RepeatIcon } from "./Icons";
+import { XIcon, RepeatIcon, AppIcon } from "./Icons";
 
 function MovementForm() {
   const { form, closeForm, saveMovement, total, showToast, movements, setRecurring } = useApp();
@@ -234,7 +234,7 @@ function MovementForm() {
                   style={{ animationDelay: `${i * 30}ms` }}
                   aria-pressed={active}
                 >
-                  <span className={`text-xl leading-none transition-transform duration-300 ${active ? "scale-125" : ""}`}>{c.icon}</span>
+                  <span className={`transition-transform duration-300 ${active ? "scale-125" : ""}`} style={{ color: c.color }}><AppIcon name={c.icon} className="h-5 w-5" /></span>
                   <span className="w-full break-words text-center text-[10.5px] leading-tight sm:text-[11px]">
                     {{ Entretenimiento: "Ocio", Transporte: "Transp.", "Otros ingresos": "Otros" }[c.name] || c.name}
                   </span>

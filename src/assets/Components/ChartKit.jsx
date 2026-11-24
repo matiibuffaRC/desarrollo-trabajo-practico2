@@ -15,6 +15,7 @@ import {
 } from "recharts";
 import { formatMoney, formatCompact, INCOME_COLOR, EXPENSE_COLOR } from "../../lib/finance";
 import { useApp } from "../../lib/AppContext";
+import { ChartIcon } from "./Icons";
 
 const AXIS = { fontSize: 11, fill: "#898781" };
 
@@ -61,7 +62,7 @@ export function Legend({ items }) {
 export function EmptyChart({ message = "Todavía no hay datos para mostrar", height = 220 }) {
   return (
     <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-slate-200 text-center" style={{ height }}>
-      <span className="text-2xl">📊</span>
+      <ChartIcon className="h-7 w-7 text-slate-300" />
       <p className="max-w-[220px] text-sm text-slate-400">{message}</p>
     </div>
   );
@@ -118,7 +119,7 @@ export function CategoryList({ data, limit }) {
             <span className="flex min-w-0 items-center gap-2 font-semibold">
               <span className="h-2.5 w-2.5 shrink-0 rounded-[3px]" style={{ backgroundColor: d.color }} />
               <span className="truncate">
-                {d.icon} {d.name}
+                {d.name}
               </span>
             </span>
             <span className="num shrink-0 font-bold">
@@ -158,7 +159,7 @@ export function IncomeExpenseBars({ data, height = 260 }) {
 }
 
 // Área con la evolución del saldo
-export function BalanceArea({ data, height = 220, compact = false, color = "#5b4cff" }) {
+export function BalanceArea({ data, height = 220, compact = false, color = "#1a8fe3" }) {
   const t = useChartTheme();
   if (!data.length) return <EmptyChart height={height} />;
   const id = `grad-${color.replace("#", "")}-${compact ? "c" : "f"}`;

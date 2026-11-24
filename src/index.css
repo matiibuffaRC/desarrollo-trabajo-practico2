@@ -2,12 +2,12 @@
 
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --color-brand-50: #f1efff;
-  --color-brand-100: #e4e0ff;
-  --color-brand-200: #cbc4ff;
-  --color-brand-500: #5b4cff;
-  --color-brand-600: #4b3cf0;
-  --color-brand-700: #3d2fd1;
+  --color-brand-50: #e9f6ff;
+  --color-brand-100: #d2ecff;
+  --color-brand-200: #a6d9ff;
+  --color-brand-500: #1a8fe3;
+  --color-brand-600: #1478c8;
+  --color-brand-700: #0f60a6;
   --color-ink: #12121a;
   --color-income: #12996a;
   --color-expense: #d9541e;
@@ -18,7 +18,7 @@
   color-scheme: light;
   --bg-page: #f5f5fa;
   --line: rgba(18, 18, 26, 0.07);
-  --glow-a: rgba(91, 76, 255, 0.10);
+  --glow-a: rgba(26, 143, 227, 0.10);
   --glow-b: rgba(27, 175, 122, 0.07);
 }
 
@@ -29,7 +29,7 @@ html.dark {
   color-scheme: dark;
   --bg-page: #0c0c12;
   --line: rgba(255, 255, 255, 0.07);
-  --glow-a: rgba(91, 76, 255, 0.16);
+  --glow-a: rgba(26, 143, 227, 0.16);
   --glow-b: rgba(27, 175, 122, 0.08);
 
   --color-white: #16161f;
@@ -44,10 +44,10 @@ html.dark {
   --color-slate-600: #c2c2d0;
   --color-slate-700: #d6d6e1;
 
-  --color-brand-50: #211e46;
-  --color-brand-100: #2c2862;
-  --color-brand-600: #9a90ff;
-  --color-brand-700: #b0a8ff;
+  --color-brand-50: #0f2438;
+  --color-brand-100: #143654;
+  --color-brand-600: #5cbcff;
+  --color-brand-700: #8ad0ff;
 
   --color-income: #3ccf95;
   --color-expense: #ff8a5c;
@@ -68,11 +68,11 @@ html.dark {
   --color-white: #ffffff;
   --color-black: #000000;
   --color-ink: #12121a;
-  --color-brand-200: #cbc4ff;
+  --color-brand-200: #a6d9ff;
 }
 
 html.dark .keep-dark {
-  background-image: linear-gradient(160deg, #1d1a3f 0%, #12121a 60%);
+  background-image: linear-gradient(160deg, #0e2236 0%, #12121a 60%);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 24px 48px rgba(0, 0, 0, 0.45);
 }
 
@@ -101,7 +101,7 @@ body {
 }
 
 ::selection {
-  background: rgba(91, 76, 255, 0.25);
+  background: rgba(26, 143, 227, 0.25);
 }
 
 @layer base {
@@ -164,7 +164,7 @@ html.privacy .num:not(input):not(button):not(.no-privacy) {
   .input:focus {
     outline: none;
     border-color: var(--color-brand-500);
-    box-shadow: 0 0 0 4px rgba(91, 76, 255, 0.14);
+    box-shadow: 0 0 0 4px rgba(26, 143, 227, 0.14);
   }
 
   .chip {
@@ -183,7 +183,7 @@ html.privacy .num:not(input):not(button):not(.no-privacy) {
   }
 
   .chip:hover {
-    border-color: rgba(91, 76, 255, 0.4);
+    border-color: rgba(26, 143, 227, 0.4);
   }
 
   .chip:active {
@@ -250,8 +250,8 @@ html.dark .card {
 }
 
 @keyframes pulseRing {
-  0% { box-shadow: 0 0 0 0 rgba(91, 76, 255, 0.55); }
-  100% { box-shadow: 0 0 0 18px rgba(91, 76, 255, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(26, 143, 227, 0.55); }
+  100% { box-shadow: 0 0 0 18px rgba(26, 143, 227, 0); }
 }
 
 @keyframes cellIn {
@@ -390,7 +390,7 @@ body {
 }
 
 .profile-banner {
-  background: linear-gradient(110deg, #5b4cff, #818cf8, #6ee7b7, #5b4cff);
+  background: linear-gradient(110deg, #1a8fe3, #38bdf8, #6ee7b7, #1a8fe3);
   background-size: 300% 100%;
   animation: bannerFlow 10s ease-in-out infinite;
 }

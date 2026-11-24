@@ -19,7 +19,7 @@ import MovementItem from "../Components/MovementItem";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import AnimatedNumber from "../Components/AnimatedNumber";
 import { BalanceArea, CategoryList } from "../Components/ChartKit";
-import { ArrowUp, ArrowDown, ChevronRight, SparkIcon, PlusIcon, EyeIcon, EyeOffIcon, RepeatIcon, TargetIcon } from "../Components/Icons";
+import { ArrowUp, ArrowDown, ChevronRight, SparkIcon, PlusIcon, EyeIcon, EyeOffIcon, RepeatIcon, TargetIcon, AppIcon } from "../Components/Icons";
 
 function greeting() {
   const h = new Date().getHours();
@@ -81,12 +81,12 @@ function Homepage() {
         <div>
           <p className="stagger-item text-sm font-medium text-slate-500">{today}</p>
           <h1 className="stagger-item mt-0.5 text-[26px] font-extrabold leading-tight tracking-tight md:text-3xl" style={{ animationDelay: "80ms" }}>
-            {greeting()}, {firstName} <span className="inline-block origin-[70%_70%] animate-[wiggle_0.6s_ease_0.6s_2]">👋</span>
+            {greeting()}, {firstName}
           </h1>
         </div>
         <Link
           to="/profile"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-indigo-400 text-base font-bold text-snow shadow-md transition active:scale-90 md:hidden"
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-sky-400 text-base font-bold text-snow shadow-md transition active:scale-90 md:hidden"
           aria-label="Ir al perfil"
         >
           {profile.name.charAt(0).toUpperCase()}
@@ -123,7 +123,7 @@ function Homepage() {
               </p>
 
               <div className="-mx-2 mt-4 h-16">
-                <BalanceArea data={data.trend} compact height={64} color="#a99fff" />
+                <BalanceArea data={data.trend} compact height={64} color="#8fd3ff" />
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-3">
@@ -259,8 +259,8 @@ function Homepage() {
                   const cat = getCategory(rule);
                   return (
                     <li key={rule.id} className="flex items-center gap-3 rounded-xl px-1 py-1.5">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-base" style={{ backgroundColor: `${cat.color}1f` }}>
-                        {cat.icon}
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-base" style={{ backgroundColor: `${cat.color}1f`, color: cat.color }}>
+                        <AppIcon name={cat.icon} className="h-[18px] w-[18px]" />
                       </span>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-bold">{rule.descripcion}</p>
@@ -294,8 +294,8 @@ function Homepage() {
                   return (
                     <div key={g.id}>
                       <div className="mb-1.5 flex items-center justify-between gap-2 text-sm">
-                        <span className="truncate font-bold">
-                          {g.icon} {g.name}
+                        <span className="flex min-w-0 items-center gap-1.5 truncate font-bold">
+                          <AppIcon name={g.icon} className="h-4 w-4 shrink-0" style={{ color: g.color }} /> {g.name}
                         </span>
                         <span className="no-privacy shrink-0 text-xs font-bold text-slate-500">{ins.pct.toFixed(0)}%</span>
                       </div>

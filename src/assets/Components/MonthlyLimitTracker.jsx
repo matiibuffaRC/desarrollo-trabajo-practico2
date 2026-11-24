@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useApp } from "../../lib/AppContext";
 import { formatMoney, formatCompact } from "../../lib/finance";
-import { EditIcon, AlertIcon, CheckIcon, ChevronRight } from "./Icons";
+import { EditIcon, AlertIcon, CheckIcon, ChevronRight, XIcon } from "./Icons";
 import AnimatedNumber from "./AnimatedNumber";
 
 function MonthlyLimitTracker({ spent, overBudget = [] }) {
@@ -92,8 +92,8 @@ function MonthlyLimitTracker({ spent, overBudget = [] }) {
             <button onClick={save} className="rounded-xl bg-ink px-4 text-sm font-bold text-white">
               Guardar
             </button>
-            <button onClick={() => setEditing(false)} className="rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-600">
-              ✕
+            <button onClick={() => setEditing(false)} className="rounded-xl bg-slate-100 px-3 text-sm font-bold text-slate-600" aria-label="Cancelar">
+              <XIcon className="h-4 w-4" />
             </button>
           </div>
           <div className="mt-2 flex flex-wrap gap-1.5">

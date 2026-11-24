@@ -46,7 +46,7 @@ function Navigation({ hidden = false }) {
       {/* Desktop: barra lateral */}
       <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 flex-col border-r border-[var(--line)] bg-white/80 px-4 py-8 backdrop-blur-xl md:flex">
         <div className="mb-10 flex items-center gap-3 px-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-indigo-400 text-snow shadow-[0_8px_20px_rgba(91,76,255,0.35)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-sky-400 text-snow shadow-[0_8px_20px_rgba(26, 143, 227,0.35)]">
             <WalletIcon className="h-5 w-5" />
           </div>
           <div>
@@ -57,7 +57,7 @@ function Navigation({ hidden = false }) {
 
         <button
           onClick={() => openForm()}
-          className={`group mb-6 flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-4 py-3 text-sm font-bold text-snow shadow-[0_10px_24px_rgba(91,76,255,0.35)] transition hover:-translate-y-0.5 hover:bg-brand-600 active:scale-[0.98] ${
+          className={`group mb-6 flex items-center justify-center gap-2 rounded-2xl bg-brand-500 px-4 py-3 text-sm font-bold text-snow shadow-[0_10px_24px_rgba(26, 143, 227,0.35)] transition hover:-translate-y-0.5 hover:bg-brand-600 active:scale-[0.98] ${
             movements.length === 0 ? "animate-pulse-ring" : ""
           }`}
         >
@@ -115,7 +115,7 @@ function Navigation({ hidden = false }) {
           </div>
 
           <Link to="/profile" className="flex items-center gap-3 rounded-2xl bg-slate-50 p-3 transition hover:bg-slate-100">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-indigo-400 text-sm font-bold text-snow">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-sky-400 text-sm font-bold text-snow">
               {profile.name.charAt(0).toUpperCase()}
             </div>
             <div className="min-w-0">
@@ -149,7 +149,7 @@ function Navigation({ hidden = false }) {
           <button
             onClick={() => openForm()}
             aria-label="Nuevo movimiento"
-            className={`absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-[18%] items-center justify-center rounded-full bg-brand-500 text-snow shadow-[0_10px_24px_rgba(91,76,255,0.45)] ring-4 ring-[var(--bg-page)] transition active:scale-90 ${
+            className={`absolute left-1/2 top-0 flex h-14 w-14 -translate-x-1/2 -translate-y-[18%] items-center justify-center rounded-full bg-brand-500 text-snow shadow-[0_10px_24px_rgba(26, 143, 227,0.45)] ring-4 ring-[var(--bg-page)] transition active:scale-90 ${
               movements.length === 0 ? "animate-pulse-ring" : ""
             }`}
           >

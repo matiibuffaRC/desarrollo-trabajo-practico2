@@ -19,7 +19,7 @@ import MovementItem from "../Components/MovementItem";
 import Pagination from "../Components/Pagination";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import AnimatedNumber from "../Components/AnimatedNumber";
-import { SearchIcon, FilterIcon, XIcon, DownloadIcon, TrashIcon, ChevronDown } from "../Components/Icons";
+import { SearchIcon, FilterIcon, XIcon, DownloadIcon, TrashIcon, ChevronDown, AppIcon } from "../Components/Icons";
 
 const PERIODS = [
   { id: "todo", label: "Todo" },
@@ -305,7 +305,7 @@ function ActivityPage() {
               <div className="flex flex-wrap gap-1.5">
                 {visibleCats.map((c) => (
                   <button key={c.name} className="chip" data-active={selectedCats.includes(c.name)} onClick={() => toggleCat(c.name)}>
-                    <span>{c.icon}</span> {c.name}
+                    <AppIcon name={c.icon} className="h-3.5 w-3.5" /> {c.name}
                   </button>
                 ))}
               </div>
@@ -390,7 +390,7 @@ function ActivityPage() {
       <section className="card p-3 md:p-4">
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-2 px-4 py-12 text-center">
-            <span className="text-3xl">🔎</span>
+            <SearchIcon className="h-8 w-8 text-slate-300" />
             <p className="font-bold">{movements.length ? "No hay resultados" : "Todavía no hay movimientos"}</p>
             <p className="text-sm text-slate-500">
               {movements.length ? "Probá cambiando o limpiando los filtros." : "Tocá el botón + para agregar el primero."}

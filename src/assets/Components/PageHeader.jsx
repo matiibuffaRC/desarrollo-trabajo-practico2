@@ -20,7 +20,7 @@ function PageHeader({ eyebrow, title, subtitle, actions, showAvatar = true }) {
         {showAvatar && (
           <Link
             to="/profile"
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-indigo-400 text-sm font-bold text-snow shadow-md transition active:scale-90 sm:hidden"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-sky-400 text-sm font-bold text-snow shadow-md transition active:scale-90 sm:hidden"
             aria-label="Ir al perfil"
           >
             {profile.name.charAt(0).toUpperCase()}
